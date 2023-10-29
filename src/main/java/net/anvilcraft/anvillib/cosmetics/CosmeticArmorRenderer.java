@@ -25,6 +25,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.Vector4f;
 import net.minecraftforge.fml.ModList;
 import software.bernie.geckolib3.compat.PatchouliCompat;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -36,6 +37,8 @@ import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.core.util.Color;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
+import software.bernie.geckolib3.geo.render.built.GeoQuad;
+import software.bernie.geckolib3.geo.render.built.GeoVertex;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 import software.bernie.geckolib3.util.EModelRenderCycle;
@@ -51,6 +54,7 @@ public class CosmeticArmorRenderer extends BipedEntityModel<PlayerEntity>
     protected float heightScale = 1;
     protected Matrix4f dispatchedMat = new Matrix4f();
     protected Matrix4f renderEarlyMat = new Matrix4f();
+    protected int currentFrame = 0;
 
     public String headBone = null;
     public String bodyBone = null;
@@ -115,6 +119,9 @@ public class CosmeticArmorRenderer extends BipedEntityModel<PlayerEntity>
         poseStack.push();
         poseStack.translate(0, 24 / 16F, 0);
         poseStack.scale(-1, -1, 1);
+
+        double currentTick = entityLiving.age; // TODO: Custom frametime/animation speed
+		currentFrame = ((int)(currentTick * 1.0F)) % this.getCurrentCosmetic().getTotalFrames();;
 
         //this.dispatchedMat = poseStack.last().pose().copy();
         this.dispatchedMat = poseStack.peek().getPositionMatrix().copy();
@@ -410,4 +417,22 @@ public class CosmeticArmorRenderer extends BipedEntityModel<PlayerEntity>
     public ICosmetic getCurrentCosmetic() {
         return this.currentArmorItem.getCosmetic();
     }
+
+    public float calcVOffset(float v) {
+		float totalFrames = (float)this.getCurrentCosmetic().getTotalFrames();
+		float currentTextureOffset = (float)currentFrame / totalFrames;
+		return (v / totalFrames) + currentTextureOffset;
+	}
+
+	@Override
+	public void createVerticesOfQuad(GeoQuad quad, Matrix4f poseState, Vec3f normal, VertexConsumer buffer,
+			int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		for (GeoVertex vertex : quad.vertices) {
+			Vector4f vector4f = new Vector4f(vertex.position.getX(), vertex.position.getY(), vertex.position.getZ(), 1);
+
+			vector4f.transform(poseState);
+			buffer.vertex(vector4f.getX(), vector4f.getY(), vector4f.getZ(), red, green, blue, alpha, vertex.textureU,
+				calcVOffset(vertex.textureV), packedOverlay, packedLight, normal.getX(), normal.getY(), normal.getZ());
+		}
+	}
 }

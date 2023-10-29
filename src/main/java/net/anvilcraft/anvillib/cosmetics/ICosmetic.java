@@ -1,7 +1,6 @@
 package net.anvilcraft.anvillib.cosmetics;
 
 import net.minecraft.util.Identifier;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
 
 public interface ICosmetic {
     Identifier getAnimationFileLocation();
@@ -34,11 +33,18 @@ public interface ICosmetic {
         return null; //leg_right
     }
 
-    void addAnimations(AnimationBuilder builder);
+    default String getIdleAnimationName() {
+        return null;
+    }
 
     default boolean readyToRender() {
         return true;
     }
 
     Identifier getID();
+
+    default int getTotalFrames() {
+        return 1;
+    }
+    
 }

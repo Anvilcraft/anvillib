@@ -3,6 +3,7 @@ package net.anvilcraft.anvillib.cosmetics;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -15,7 +16,9 @@ public class CosmeticItem implements IAnimatable {
 
     public CosmeticItem(ICosmetic cosmetic) {
         this.cosmetic = cosmetic;
-        this.cosmetic.addAnimations(animationBuilder);
+        if (cosmetic.getIdleAnimationName() != null) {
+            this.animationBuilder.addAnimation(cosmetic.getIdleAnimationName(), EDefaultLoopTypes.LOOP);
+        }
     }
 
     private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
