@@ -1,0 +1,29 @@
+{
+    "schemaVersion": 1,
+    "id": "anvillib",
+    "version": "${version}",
+    "name": "AnvilLib",
+    "description": "ALEC!",
+    "authors": [
+        "LordMZTE",
+        "(tilera)"
+    ],
+    "contact": {
+        "homepage": "https://anvilcraft.net/",
+        "sources": "https://git.tilera.org/anvilcraft/anvillib"
+    },
+    "license": "AGPL-3.0+ALEC",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "net.anvilcraft.anvillib.AnvilLibFabric"
+        ]
+    },
+    "mixins": [
+        "anvillib.mixins.json",
+        "anvillib-common.mixins.json"
+    ],
+    "depends": {
+        "minecraft": "1.18.2"
+    }
+}

@@ -1,5 +1,4 @@
 # gradle
-
 .gradle/
 build/
 out/
@@ -7,28 +6,26 @@ classes/
 .factorypath
 
 # eclipse
-
 *.launch
 
 # idea
-
 .idea/
 *.iml
 *.ipr
 *.iws
 
 # vscode
-
 .settings/
 .vscode/
 bin/
 .classpath
 .project
 
-# macos
-
+# kekos
 *.DS_Store
 
 # fabric
-
 run/
+
+# architectury
+.architectury-transformer
