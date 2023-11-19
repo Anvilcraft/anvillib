@@ -7,7 +7,7 @@ license = "AGPL-3.0+ALEC"
 modId = "anvillib"
 version = "${version}"
 displayName = "AnvilLib"
-authors = "LordMZTE, (tilera)"
+authors = "LordMZTE, tilera"
 description = '''
 AnvilLib library mod
 '''
