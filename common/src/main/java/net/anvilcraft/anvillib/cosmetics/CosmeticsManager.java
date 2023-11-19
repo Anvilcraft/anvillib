@@ -7,11 +7,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+import net.minecraft.util.Identifier;
+import software.bernie.geckolib3.file.AnimationFile;
+import software.bernie.geckolib3.geo.render.built.GeoModel;
 
 public class CosmeticsManager {
     private static List<ICosmeticProvider> providers = new ArrayList<>();
     private static Map<UUID, List<ICosmetic>> cosmeticCache = new HashMap<>();
     private static Set<UUID> activePlayers = new HashSet<>();
+    private static Map<Identifier, GeoModel> cachedModels = new ConcurrentHashMap<>();
+    private static Map<Identifier, AnimationFile> cachedAnimations = new ConcurrentHashMap<>();
 
     private static void refresh() {
         boolean doRefresh = false;
@@ -48,4 +55,21 @@ public class CosmeticsManager {
         refresh();
         return cosmeticCache.get(uuid);
     }
+
+    protected static GeoModel getModel(Identifier id) {
+        return cachedModels.get(id);
+    }
+
+    protected static AnimationFile getAnimations(Identifier id) {
+        return cachedAnimations.get(id);
+    }
+
+    public static void loadModel(Identifier id, GeoModel model) {
+        cachedModels.put(id, model);
+    }
+
+    public static void loadAnimations(Identifier id, AnimationFile animations) {
+        cachedAnimations.put(id, animations);
+    }
+
 }
