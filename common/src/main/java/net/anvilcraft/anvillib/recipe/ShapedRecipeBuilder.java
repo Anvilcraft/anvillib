@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
@@ -23,6 +24,7 @@ public class ShapedRecipeBuilder {
     public ShapedRecipeBuilder(Identifier ident, ItemStack output) {
         this.ident = ident;
         this.output = output;
+        this.ingredient(' ', Blocks.AIR);
     }
 
     public ShapedRecipeBuilder pattern(String... pat) {
