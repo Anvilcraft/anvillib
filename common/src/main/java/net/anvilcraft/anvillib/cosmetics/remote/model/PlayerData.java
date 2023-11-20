@@ -11,5 +11,7 @@ public class PlayerData {
     public UUID uuid;
     @Expose
     public List<String> cosmetics;
+    @Expose
+    public String cape;
 
 }

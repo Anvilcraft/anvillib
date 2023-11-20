@@ -1,4 +1,4 @@
-package net.anvilcraft.anvillib.mixin.client;
+package net.anvilcraft.anvillib.mixin.fabric.client;
 
 import java.util.Map;
 

@@ -76,6 +76,7 @@ public class CosmeticAssetsLoaderThread extends FileDownloaderThread {
         this.cosmetic.loadAnimations(animations, anim);
     }
 
+    @SuppressWarnings("deprecation")
     private void loadTexture(TextureData data) {
         String hash = Hashing.sha1().hashUnencodedChars(this.data.id).toString();
         AbstractTexture texture = this.textureManager.getOrDefault(this.cosmetic.getTextureLocation(), MissingSprite.getMissingSpriteTexture());

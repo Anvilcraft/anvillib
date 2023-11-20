@@ -12,8 +12,11 @@ public class AnvilLib {
     public static final Logger LOGGER = LogManager.getLogger();
 
     public static void initialize() {
-        Bus.MAIN.register(new ClientEventHandler());
-
         GeckoLib.initialize();
     }
+
+    public static void initializeClient() {
+        Bus.MAIN.register(new ClientEventHandler());
+    }
+
 }

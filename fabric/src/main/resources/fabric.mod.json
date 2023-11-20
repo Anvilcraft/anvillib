@@ -17,6 +17,9 @@
     "entrypoints": {
         "main": [
             "net.anvilcraft.anvillib.AnvilLibFabric"
+        ],
+        "client": [
+            "net.anvilcraft.anvillib.AnvilLibFabric"
         ]
     },
     "mixins": [

@@ -26,6 +26,10 @@ public class PlayerCosmeticLoaderThread extends FileDownloaderThread{
                 this.provider.loadCosmetic(id);
                 this.provider.playerCosmetics.get(player.uuid).add(id);
             }
+            if (player.cape != null) {
+                this.provider.loadCape(player.cape);
+                this.provider.playerCapes.put(player.uuid, player.cape);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

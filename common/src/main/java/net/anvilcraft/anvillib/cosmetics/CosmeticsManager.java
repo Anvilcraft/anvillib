@@ -16,6 +16,7 @@ import software.bernie.geckolib3.geo.render.built.GeoModel;
 public class CosmeticsManager {
     private static List<ICosmeticProvider> providers = new ArrayList<>();
     private static Map<UUID, List<ICosmetic>> cosmeticCache = new HashMap<>();
+    private static Map<UUID, Identifier> capeCache = new HashMap<>();
     private static Set<UUID> activePlayers = new HashSet<>();
     private static Map<Identifier, GeoModel> cachedModels = new ConcurrentHashMap<>();
     private static Map<Identifier, AnimationFile> cachedAnimations = new ConcurrentHashMap<>();
@@ -40,6 +41,10 @@ public class CosmeticsManager {
         List<ICosmetic> cosmetics = cosmeticCache.get(player);
         for (ICosmeticProvider provider : providers) {
             provider.addCosmetics(player, (cosmetic) -> cosmetics.add(cosmetic));
+            if (!capeCache.containsKey(player)) {
+                Identifier cape = provider.getCape(player);
+                if (cape != null) capeCache.put(player, cape);
+            }
         }
     }
 
@@ -54,6 +59,11 @@ public class CosmeticsManager {
         }
         refresh();
         return cosmeticCache.get(uuid);
+    }
+
+    public static Identifier getCape(UUID player) {
+        loadPlayer(player);
+        return capeCache.getOrDefault(player, null);
     }
 
     protected static GeoModel getModel(Identifier id) {
