@@ -14,6 +14,9 @@ import net.minecraft.world.World;
 
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity {
+
+    private static Identifier ELYTRA = new Identifier("textures/entity/elytra.png");
+
     public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
         super(world, pos, yaw, profile);
     }
@@ -25,5 +28,14 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity {
     @Overwrite
     public Identifier getCapeTexture() {
         return CosmeticsManager.getCape(this.uuid);
+    }
+
+    /**
+     * @reason Custom capes & no Mojank capes
+     * @author tilera
+     */
+    @Overwrite
+    public Identifier getElytraTexture() {
+        return ELYTRA;
     }
 }
