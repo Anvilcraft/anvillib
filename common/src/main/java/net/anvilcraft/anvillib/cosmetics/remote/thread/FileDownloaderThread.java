@@ -16,7 +16,6 @@ import com.google.gson.JsonSyntaxException;
 import net.anvilcraft.anvillib.AnvilLib;
 
 public abstract class FileDownloaderThread implements Runnable {
-    
     protected Gson gson = new GsonBuilder().create();
     protected HttpClient client = HttpClient.newBuilder().build();
     protected final String version;
@@ -39,9 +38,10 @@ public abstract class FileDownloaderThread implements Runnable {
         HttpRequest req = this.buildRequest(url);
         InputStream is = null;
         try {
-            HttpResponse<InputStream> res = client.send(req, HttpResponse.BodyHandlers.ofInputStream());
+            HttpResponse<InputStream> res
+                = client.send(req, HttpResponse.BodyHandlers.ofInputStream());
             if (res.statusCode() == 200) {
-                is = res.body(); 
+                is = res.body();
             } else if (res.statusCode() != 404) {
                 AnvilLib.LOGGER.error("Unexpected status code: {}", res.statusCode());
             }
@@ -55,9 +55,10 @@ public abstract class FileDownloaderThread implements Runnable {
         HttpRequest req = this.buildRequest(url);
         String is = null;
         try {
-            HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> res
+                = client.send(req, HttpResponse.BodyHandlers.ofString());
             if (res.statusCode() == 200) {
-                is = res.body(); 
+                is = res.body();
             } else if (res.statusCode() != 404) {
                 AnvilLib.LOGGER.error("Unexpected status code: {}", res.statusCode());
             }
@@ -69,15 +70,15 @@ public abstract class FileDownloaderThread implements Runnable {
 
     public <T> T loadJson(URI url, Class<T> type) throws IOException {
         InputStream stream = this.getStreamForURL(url);
-        if (stream == null) return null;
+        if (stream == null)
+            return null;
         try {
             T json = this.gson.fromJson(new InputStreamReader(stream), type);
             return json;
-        } catch(JsonSyntaxException | JsonIOException e) {
+        } catch (JsonSyntaxException | JsonIOException e) {
             throw new IOException(e);
         } finally {
             stream.close();
         }
     }
-
 }

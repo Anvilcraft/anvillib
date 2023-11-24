@@ -10,7 +10,6 @@ import software.bernie.geckolib3.file.AnimationFile;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 
 public class RemoteCosmetic implements ICosmetic {
-
     private Identifier id;
     private boolean loadedModel = false;
     private boolean loadedTexture = false;
@@ -24,9 +23,9 @@ public class RemoteCosmetic implements ICosmetic {
 
     public RemoteCosmetic(String id) {
         this.id = new Identifier("anvillib", id);
-        this.modelLocation = new Identifier("anvillib", "models/remote/"+id);
-        this.textureLocation = new Identifier("anvillib", "textures/remote/"+id);
-        this.animationsLocation = new Identifier("anvillib", "animations/remote/"+id);
+        this.modelLocation = new Identifier("anvillib", "models/remote/" + id);
+        this.textureLocation = new Identifier("anvillib", "textures/remote/" + id);
+        this.animationsLocation = new Identifier("anvillib", "animations/remote/" + id);
     }
 
     @Override
@@ -114,5 +113,4 @@ public class RemoteCosmetic implements ICosmetic {
     public int getTotalFrames() {
         return this.frameCount;
     }
-    
 }

@@ -43,7 +43,8 @@ public class CosmeticFeatureRenderer extends ArmorFeatureRenderer<
         float netHeadYaw,
         float headPitch
     ) {
-        if (player.isInvisible()) return;
+        if (player.isInvisible())
+            return;
         for (ICosmetic c : CosmeticsManager.getCosmeticsForPlayer(player.getUuid())) {
             if (c.readyToRender())
                 this.renderCosmetic(matrix, buffer, player, light, c, partialTicks);

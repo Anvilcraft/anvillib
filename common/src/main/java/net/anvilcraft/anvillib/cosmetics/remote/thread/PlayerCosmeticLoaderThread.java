@@ -6,8 +6,7 @@ import java.net.URI;
 import net.anvilcraft.anvillib.cosmetics.remote.RemoteCosmeticProvider;
 import net.anvilcraft.anvillib.cosmetics.remote.model.PlayerData;
 
-public class PlayerCosmeticLoaderThread extends FileDownloaderThread{
-  
+public class PlayerCosmeticLoaderThread extends FileDownloaderThread {
     private URI config;
     private RemoteCosmeticProvider provider;
 
@@ -21,7 +20,8 @@ public class PlayerCosmeticLoaderThread extends FileDownloaderThread{
     public void run() {
         try {
             PlayerData player = this.loadJson(config, PlayerData.class);
-            if (player == null) return;
+            if (player == null)
+                return;
             for (String id : player.cosmetics) {
                 this.provider.loadCosmetic(id);
                 this.provider.playerCosmetics.get(player.uuid).add(id);
@@ -34,5 +34,4 @@ public class PlayerCosmeticLoaderThread extends FileDownloaderThread{
             e.printStackTrace();
         }
     }
-    
 }

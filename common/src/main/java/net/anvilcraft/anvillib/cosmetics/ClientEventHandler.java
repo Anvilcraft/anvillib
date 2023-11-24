@@ -15,9 +15,9 @@ import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class ClientEventHandler implements IEventBusRegisterable {
-
     private void onAddLayers(AddEntityRenderLayersEvent ev) {
-        for (Entry<String, EntityRenderer<? extends PlayerEntity>> skin : ev.skinMap().entrySet())
+        for (Entry<String, EntityRenderer<? extends PlayerEntity>> skin :
+             ev.skinMap().entrySet())
             if (skin.getValue() instanceof PlayerEntityRenderer render)
                 render.addFeature(new CosmeticFeatureRenderer(render, skin.getKey()));
     }
@@ -28,7 +28,9 @@ public class ClientEventHandler implements IEventBusRegisterable {
             URI playerBase = new URI("https://api.tilera.xyz/anvillib/data/players/");
             URI cosmeticBase = new URI("https://api.tilera.xyz/anvillib/data/cosmetics/");
             URI capeBase = new URI("https://api.tilera.xyz/anvillib/data/capes/");
-            CosmeticsManager.registerProvider(new RemoteCosmeticProvider(playerBase, cosmeticBase, capeBase, cacheDir));
+            CosmeticsManager.registerProvider(
+                new RemoteCosmeticProvider(playerBase, cosmeticBase, capeBase, cacheDir)
+            );
         } catch (Exception e) {
             AnvilLib.LOGGER.error(e);
         }

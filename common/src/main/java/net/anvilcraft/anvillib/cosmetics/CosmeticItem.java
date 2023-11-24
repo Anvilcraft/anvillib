@@ -17,7 +17,9 @@ public class CosmeticItem implements IAnimatable {
     public CosmeticItem(ICosmetic cosmetic) {
         this.cosmetic = cosmetic;
         if (cosmetic.getIdleAnimationName() != null) {
-            this.animationBuilder.addAnimation(cosmetic.getIdleAnimationName(), EDefaultLoopTypes.LOOP);
+            this.animationBuilder.addAnimation(
+                cosmetic.getIdleAnimationName(), EDefaultLoopTypes.LOOP
+            );
         }
     }
 

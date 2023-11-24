@@ -28,20 +28,22 @@ public class CosmeticModel extends AnimatedGeoModel<CosmeticItem> {
     }
 
     @Override
-	public Animation getAnimation(String name, IAnimatable animatable) {
-        Identifier location = ((CosmeticItem)animatable).getCosmetic().getAnimationFileLocation();
-		AnimationFile animation = CosmeticsManager.getAnimations(location);
+    public Animation getAnimation(String name, IAnimatable animatable) {
+        Identifier location
+            = ((CosmeticItem) animatable).getCosmetic().getAnimationFileLocation();
+        AnimationFile animation = CosmeticsManager.getAnimations(location);
         if (animation == null) {
             animation = GeckoLibCache.getInstance().getAnimations().get(location);
         }
-        
-		if (animation == null) {
-			throw new GeckoLibException(location,
-					"Could not find animation file. Please double check name.");
-		}
 
-		return animation.getAnimation(name);
-	}
+        if (animation == null) {
+            throw new GeckoLibException(
+                location, "Could not find animation file. Please double check name."
+            );
+        }
+
+        return animation.getAnimation(name);
+    }
 
     @Override
     public GeoModel getModel(Identifier location) {
@@ -50,16 +52,16 @@ public class CosmeticModel extends AnimatedGeoModel<CosmeticItem> {
             model = GeckoLibCache.getInstance().getGeoModels().get(location);
         }
 
-        AnimatedGeoModelAccessor accessor = (AnimatedGeoModelAccessor)this;
+        AnimatedGeoModelAccessor accessor = (AnimatedGeoModelAccessor) this;
         if (model != accessor.getCurrentModel()) {
-			accessor.getAnimationProcessor().clearModelRendererList();
-			accessor.setCurrentModel(model);
+            accessor.getAnimationProcessor().clearModelRendererList();
+            accessor.setCurrentModel(model);
 
-			for (GeoBone bone : model.topLevelBones) {
-				registerBone(bone);
-			}
-		}
+            for (GeoBone bone : model.topLevelBones) {
+                registerBone(bone);
+            }
+        }
 
-		return model;
+        return model;
     }
 }

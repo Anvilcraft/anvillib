@@ -12,7 +12,7 @@ import net.minecraft.client.RunArgs;
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {
     @Inject(at = @At("RETURN"), method = "<init>")
-	public void init(RunArgs args, CallbackInfo info) {
-		ClientEventHandler.registerRemoteCosmetics(args.directories.assetDir);
-	}
+    public void init(RunArgs args, CallbackInfo info) {
+        ClientEventHandler.registerRemoteCosmetics(args.directories.assetDir);
+    }
 }

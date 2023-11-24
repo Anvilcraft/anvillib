@@ -20,13 +20,12 @@ public class CosmeticParts {
     public final String rightArmName = "arm_right";
     public final String rightLegName = "leg_right";
 
-    public CosmeticParts() {
-        
-    }
+    public CosmeticParts() {}
 
     public CosmeticParts(GeoModel model) {
         Optional<GeoBone> maybeRoot = model.getBone("root");
-        if (maybeRoot.isEmpty()) return;
+        if (maybeRoot.isEmpty())
+            return;
         GeoBone root = maybeRoot.get();
         for (GeoBone bone : root.childBones) {
             switch (bone.name) {
@@ -51,5 +50,4 @@ public class CosmeticParts {
             }
         }
     }
-
 }

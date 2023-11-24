@@ -46,5 +46,4 @@ public interface ICosmetic {
     default int getTotalFrames() {
         return 1;
     }
-    
 }

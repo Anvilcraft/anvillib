@@ -9,7 +9,6 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 @Mixin(AnimatedGeoModel.class)
 public interface AnimatedGeoModelAccessor {
-    
     @Accessor(remap = false)
     AnimationProcessor getAnimationProcessor();
 
@@ -18,5 +17,4 @@ public interface AnimatedGeoModelAccessor {
 
     @Accessor(remap = false)
     void setCurrentModel(GeoModel model);
-
 }

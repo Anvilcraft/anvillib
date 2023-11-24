@@ -113,7 +113,9 @@ public class CosmeticArmorRenderer extends BipedEntityModel<PlayerEntity>
         poseStack.scale(-1, -1, 1);
 
         double currentTick = entityLiving.age; // TODO: Custom frametime/animation speed
-		currentFrame = ((int)(currentTick * 1.0F)) % this.getCurrentCosmetic().getTotalFrames();;
+        currentFrame
+            = ((int) (currentTick * 1.0F)) % this.getCurrentCosmetic().getTotalFrames();
+        ;
 
         //this.dispatchedMat = poseStack.last().pose().copy();
         this.dispatchedMat = poseStack.peek().getPositionMatrix().copy();
@@ -406,20 +408,46 @@ public class CosmeticArmorRenderer extends BipedEntityModel<PlayerEntity>
     }
 
     public float calcVOffset(float v) {
-		float totalFrames = (float)this.getCurrentCosmetic().getTotalFrames();
-		float currentTextureOffset = (float)currentFrame / totalFrames;
-		return (v / totalFrames) + currentTextureOffset;
-	}
+        float totalFrames = (float) this.getCurrentCosmetic().getTotalFrames();
+        float currentTextureOffset = (float) currentFrame / totalFrames;
+        return (v / totalFrames) + currentTextureOffset;
+    }
 
-	@Override
-	public void createVerticesOfQuad(GeoQuad quad, Matrix4f poseState, Vec3f normal, VertexConsumer buffer,
-			int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		for (GeoVertex vertex : quad.vertices) {
-			Vector4f vector4f = new Vector4f(vertex.position.getX(), vertex.position.getY(), vertex.position.getZ(), 1);
+    @Override
+    public void createVerticesOfQuad(
+        GeoQuad quad,
+        Matrix4f poseState,
+        Vec3f normal,
+        VertexConsumer buffer,
+        int packedLight,
+        int packedOverlay,
+        float red,
+        float green,
+        float blue,
+        float alpha
+    ) {
+        for (GeoVertex vertex : quad.vertices) {
+            Vector4f vector4f = new Vector4f(
+                vertex.position.getX(), vertex.position.getY(), vertex.position.getZ(), 1
+            );
 
-			vector4f.transform(poseState);
-			buffer.vertex(vector4f.getX(), vector4f.getY(), vector4f.getZ(), red, green, blue, alpha, vertex.textureU,
-				calcVOffset(vertex.textureV), packedOverlay, packedLight, normal.getX(), normal.getY(), normal.getZ());
-		}
-	}
+            vector4f.transform(poseState);
+            buffer.vertex(
+                vector4f.getX(),
+                vector4f.getY(),
+                vector4f.getZ(),
+                red,
+                green,
+                blue,
+                alpha,
+                vertex.textureU,
+                calcVOffset(vertex.textureV),
+                packedOverlay,
+                packedLight,
+                normal.getX(),
+                normal.getY(),
+                normal.getZ()
+            );
+        }
+    }
 }

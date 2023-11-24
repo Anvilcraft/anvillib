@@ -36,15 +36,20 @@ import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.util.json.JsonAnimationUtils;
 
 public class CosmeticAssetsLoaderThread extends FileDownloaderThread {
-
     private RemoteCosmetic cosmetic;
     private CosmeticData data;
     private MolangParser parser = new MolangParser();
-    private TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
+    private TextureManager textureManager
+        = MinecraftClient.getInstance().getTextureManager();
     private File cacheDir;
     private RemoteCosmeticProvider provider;
 
-    public CosmeticAssetsLoaderThread(RemoteCosmetic cosmetic, CosmeticData data, File cacheDir, RemoteCosmeticProvider provider) {
+    public CosmeticAssetsLoaderThread(
+        RemoteCosmetic cosmetic,
+        CosmeticData data,
+        File cacheDir,
+        RemoteCosmeticProvider provider
+    ) {
         super("0.2.0");
         this.cosmetic = cosmetic;
         this.data = data;
@@ -71,7 +76,9 @@ public class CosmeticAssetsLoaderThread extends FileDownloaderThread {
             JsonObject data = this.loadJson(url, JsonObject.class);
             animations = this.buildAnimationFile(data);
         } catch (IOException | URISyntaxException | NullPointerException e) {
-            AnvilLib.LOGGER.error("Could not load animation: {}", this.data.animationData.url, e);
+            AnvilLib.LOGGER.error(
+                "Could not load animation: {}", this.data.animationData.url, e
+            );
         }
         this.cosmetic.loadAnimations(animations, anim);
     }
@@ -79,12 +86,20 @@ public class CosmeticAssetsLoaderThread extends FileDownloaderThread {
     @SuppressWarnings("deprecation")
     private void loadTexture(TextureData data) {
         String hash = Hashing.sha1().hashUnencodedChars(this.data.id).toString();
-        AbstractTexture texture = this.textureManager.getOrDefault(this.cosmetic.getTextureLocation(), MissingSprite.getMissingSpriteTexture());
+        AbstractTexture texture = this.textureManager.getOrDefault(
+            this.cosmetic.getTextureLocation(), MissingSprite.getMissingSpriteTexture()
+        );
         if (texture == MissingSprite.getMissingSpriteTexture()) {
-            File file = new File(this.cacheDir, hash.length() > 2 ? hash.substring(0, 2) : "xx");
+            File file = new File(
+                this.cacheDir, hash.length() > 2 ? hash.substring(0, 2) : "xx"
+            );
             File file2 = new File(file, hash);
-            texture = new PlayerSkinTexture(file2, data.url, new Identifier("textures/block/dirt.png"), false, null);
-            this.textureManager.registerTexture(this.cosmetic.getTextureLocation(), texture);
+            texture = new PlayerSkinTexture(
+                file2, data.url, new Identifier("textures/block/dirt.png"), false, null
+            );
+            this.textureManager.registerTexture(
+                this.cosmetic.getTextureLocation(), texture
+            );
         }
         this.cosmetic.loadTexture(data);
     }
@@ -95,7 +110,9 @@ public class CosmeticAssetsLoaderThread extends FileDownloaderThread {
             String data = Objects.requireNonNull(this.getStringForURL(uri));
             GeoModel model = this.buildModel(data);
             this.cosmetic.loadModel(model);
-        } catch (NullPointerException | URISyntaxException | IOException | GeckoLibException e) {
+        } catch (
+            NullPointerException | URISyntaxException | IOException | GeckoLibException e
+        ) {
             AnvilLib.LOGGER.error("Can't load remote model: {}", url, e);
             this.handleFailure();
         }
@@ -107,29 +124,33 @@ public class CosmeticAssetsLoaderThread extends FileDownloaderThread {
 
     private AnimationFile buildAnimationFile(JsonObject json) {
         AnimationFile animationFile = new AnimationFile();
-		for (Map.Entry<String, JsonElement> entry : JsonAnimationUtils.getAnimations(json)) {
-			String animationName = entry.getKey();
-			Animation animation;
-			try {
-				animation = JsonAnimationUtils.deserializeJsonToAnimation(
-						JsonAnimationUtils.getAnimation(json, animationName), parser);
-				animationFile.putAnimation(animationName, animation);
-			} catch (Exception e) {
-				AnvilLib.LOGGER.error("Could not load animation: {}", animationName, e);
-				throw new RuntimeException(e);
-			}
-		}
-		return animationFile;
+        for (Map.Entry<String, JsonElement> entry :
+             JsonAnimationUtils.getAnimations(json)) {
+            String animationName = entry.getKey();
+            Animation animation;
+            try {
+                animation = JsonAnimationUtils.deserializeJsonToAnimation(
+                    JsonAnimationUtils.getAnimation(json, animationName), parser
+                );
+                animationFile.putAnimation(animationName, animation);
+            } catch (Exception e) {
+                AnvilLib.LOGGER.error("Could not load animation: {}", animationName, e);
+                throw new RuntimeException(e);
+            }
+        }
+        return animationFile;
     }
 
     private GeoModel buildModel(String json) throws IOException {
         Identifier location = this.cosmetic.getModelLocation();
         RawGeoModel rawModel = Converter.fromJsonString(json);
-		if (rawModel.getFormatVersion() != FormatVersion.VERSION_1_12_0) {
-			throw new GeckoLibException(location, "Wrong geometry json version, expected 1.12.0");
-		}
-		RawGeometryTree rawGeometryTree = RawGeometryTree.parseHierarchy(rawModel);
-		return GeoBuilder.getGeoBuilder(location.getNamespace()).constructGeoModel(rawGeometryTree);
+        if (rawModel.getFormatVersion() != FormatVersion.VERSION_1_12_0) {
+            throw new GeckoLibException(
+                location, "Wrong geometry json version, expected 1.12.0"
+            );
+        }
+        RawGeometryTree rawGeometryTree = RawGeometryTree.parseHierarchy(rawModel);
+        return GeoBuilder.getGeoBuilder(location.getNamespace())
+            .constructGeoModel(rawGeometryTree);
     }
-    
 }

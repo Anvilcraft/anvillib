@@ -19,7 +19,8 @@ public class CosmeticsManager {
     private static Map<UUID, Identifier> capeCache = new HashMap<>();
     private static Set<UUID> activePlayers = new HashSet<>();
     private static Map<Identifier, GeoModel> cachedModels = new ConcurrentHashMap<>();
-    private static Map<Identifier, AnimationFile> cachedAnimations = new ConcurrentHashMap<>();
+    private static Map<Identifier, AnimationFile> cachedAnimations
+        = new ConcurrentHashMap<>();
 
     private static void refresh() {
         boolean doRefresh = false;
@@ -43,7 +44,8 @@ public class CosmeticsManager {
             provider.addCosmetics(player, (cosmetic) -> cosmetics.add(cosmetic));
             if (!capeCache.containsKey(player)) {
                 Identifier cape = provider.getCape(player);
-                if (cape != null) capeCache.put(player, cape);
+                if (cape != null)
+                    capeCache.put(player, cape);
             }
         }
     }
@@ -81,5 +83,4 @@ public class CosmeticsManager {
     public static void loadAnimations(Identifier id, AnimationFile animations) {
         cachedAnimations.put(id, animations);
     }
-
 }

@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class CosmeticData {
-    
     @Expose
     public String id;
     @Expose
@@ -16,5 +15,4 @@ public class CosmeticData {
     @Expose
     @SerializedName("texture_data")
     public TextureData textureData;
-
 }

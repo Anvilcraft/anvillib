@@ -17,14 +17,16 @@ import net.minecraft.client.texture.TextureManager;
 import net.minecraft.util.Identifier;
 
 public class CapeLoaderThread extends FileDownloaderThread {
-
     private String id;
     private File cacheDir;
     private URI url;
     private RemoteCosmeticProvider provider;
-    private TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
+    private TextureManager textureManager
+        = MinecraftClient.getInstance().getTextureManager();
 
-    public CapeLoaderThread(String id, URI url, File cacheDir, RemoteCosmeticProvider provider) {
+    public CapeLoaderThread(
+        String id, URI url, File cacheDir, RemoteCosmeticProvider provider
+    ) {
         super("0.2.0");
         this.id = id;
         this.url = url;
@@ -42,17 +44,22 @@ public class CapeLoaderThread extends FileDownloaderThread {
             AnvilLib.LOGGER.error("Can't load cape: {}", id, e);
             return;
         }
-        Identifier location = new Identifier("anvillib", "textures/cape/"+data.id);
+        Identifier location = new Identifier("anvillib", "textures/cape/" + data.id);
         String hash = Hashing.sha1().hashUnencodedChars(data.id).toString();
-        AbstractTexture texture = this.textureManager.getOrDefault(location, MissingSprite.getMissingSpriteTexture());
+        AbstractTexture texture = this.textureManager.getOrDefault(
+            location, MissingSprite.getMissingSpriteTexture()
+        );
         if (texture == MissingSprite.getMissingSpriteTexture()) {
-            File file = new File(this.cacheDir, hash.length() > 2 ? hash.substring(0, 2) : "xx");
+            File file = new File(
+                this.cacheDir, hash.length() > 2 ? hash.substring(0, 2) : "xx"
+            );
             File file2 = new File(file, hash);
-            texture = new PlayerSkinTexture(file2, data.url, new Identifier("textures/block/dirt.png"), false, null);
+            texture = new PlayerSkinTexture(
+                file2, data.url, new Identifier("textures/block/dirt.png"), false, null
+            );
             this.textureManager.registerTexture(location, texture);
         }
         this.provider.capes.put(data.id, location);
         this.provider.markDirty();
     }
-    
 }

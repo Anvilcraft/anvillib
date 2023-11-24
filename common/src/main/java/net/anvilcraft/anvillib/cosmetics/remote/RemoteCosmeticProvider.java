@@ -22,7 +22,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
 public class RemoteCosmeticProvider implements ICosmeticProvider {
-
     public static RemoteCosmeticProvider INSTANCE = null;
 
     public final Map<String, RemoteCosmetic> cosmetics = new ConcurrentHashMap<>();
@@ -38,7 +37,9 @@ public class RemoteCosmeticProvider implements ICosmeticProvider {
     public final URI capeBase;
     private final File cacheDir;
 
-    public RemoteCosmeticProvider(URI playerBase, URI cosmeticBase, URI capeBase, File cacheDir) {
+    public RemoteCosmeticProvider(
+        URI playerBase, URI cosmeticBase, URI capeBase, File cacheDir
+    ) {
         this.playerBase = playerBase;
         this.cosmeticBase = cosmeticBase;
         this.capeBase = capeBase;
@@ -55,7 +56,9 @@ public class RemoteCosmeticProvider implements ICosmeticProvider {
         this.dirty = false;
         if (playerCosmetics.containsKey(player)) {
             for (String id : playerCosmetics.get(player)) {
-                if (!this.cosmetics.containsKey(id) || !this.cosmetics.get(id).readyToRender()) continue;
+                if (!this.cosmetics.containsKey(id)
+                    || !this.cosmetics.get(id).readyToRender())
+                    continue;
                 cosmeticAdder.accept(this.cosmetics.get(id));
             }
         } else {
@@ -69,13 +72,14 @@ public class RemoteCosmeticProvider implements ICosmeticProvider {
 
     @Override
     public Identifier getCape(UUID player) {
-        if (!this.playerCapes.containsKey(player)) return null;
+        if (!this.playerCapes.containsKey(player))
+            return null;
         String cape = this.playerCapes.get(player);
         return this.capes.getOrDefault(cape, null);
     }
 
     public void markDirty() {
-        synchronized(this) {
+        synchronized (this) {
             this.dirty = true;
         }
     }
@@ -87,26 +91,31 @@ public class RemoteCosmeticProvider implements ICosmeticProvider {
     }
 
     public void loadCosmetic(String id) throws MalformedURLException {
-        if (this.cosmetics.containsKey(id) || this.knownCosmetics.containsKey(id)) return;
+        if (this.cosmetics.containsKey(id) || this.knownCosmetics.containsKey(id))
+            return;
         this.knownCosmetics.put(id, true);
         URI url = cosmeticBase.resolve(id);
         Util.getMainWorkerExecutor().execute(new CosmeticLoaderThread(url, this));
     }
 
     public void loadAssets(CosmeticData data, RemoteCosmetic cosmetic) {
-        Util.getMainWorkerExecutor().execute(new CosmeticAssetsLoaderThread(cosmetic, data, this.cacheDir, this));
+        Util.getMainWorkerExecutor().execute(
+            new CosmeticAssetsLoaderThread(cosmetic, data, this.cacheDir, this)
+        );
     }
 
     public void loadCape(String id) throws MalformedURLException {
-        if (this.capes.containsKey(id) || this.knownCapes.containsKey(id)) return;
+        if (this.capes.containsKey(id) || this.knownCapes.containsKey(id))
+            return;
         this.knownCapes.put(id, true);
         URI url = capeBase.resolve(id);
-        Util.getMainWorkerExecutor().execute(new CapeLoaderThread(id, url, this.cacheDir, this));
+        Util.getMainWorkerExecutor().execute(
+            new CapeLoaderThread(id, url, this.cacheDir, this)
+        );
     }
 
     public void failCosmeticLoading(String id) {
         AnvilLib.LOGGER.error("Cosmetic loading failed: {}", id);
         this.cosmetics.remove(id);
     }
-    
 }

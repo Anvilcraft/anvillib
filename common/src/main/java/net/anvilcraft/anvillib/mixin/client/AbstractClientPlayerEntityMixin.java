@@ -14,10 +14,11 @@ import net.minecraft.world.World;
 
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity {
-
     private static Identifier ELYTRA = new Identifier("textures/entity/elytra.png");
 
-    public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
+    public AbstractClientPlayerEntityMixin(
+        World world, BlockPos pos, float yaw, GameProfile profile
+    ) {
         super(world, pos, yaw, profile);
     }
 

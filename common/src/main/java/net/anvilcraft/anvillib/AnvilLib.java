@@ -18,5 +18,4 @@ public class AnvilLib {
     public static void initializeClient() {
         Bus.MAIN.register(new ClientEventHandler());
     }
-
 }
