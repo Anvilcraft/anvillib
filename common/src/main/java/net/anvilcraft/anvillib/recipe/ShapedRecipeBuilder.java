@@ -84,7 +84,7 @@ public class ShapedRecipeBuilder {
         DefaultedList<Ingredient> ingredients = DefaultedList.of();
         Arrays.stream(this.pattern)
             .flatMap(s -> s.chars().mapToObj(c -> (char) c))
-            .map(this.ingredients::get)
+            .map(k -> this.ingredients.getOrDefault(k, Ingredient.empty()))
             .forEach(ingredients::add);
 
         return new ShapedRecipe(
