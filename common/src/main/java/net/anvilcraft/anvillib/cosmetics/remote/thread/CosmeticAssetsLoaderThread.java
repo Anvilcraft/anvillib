@@ -35,7 +35,7 @@ import software.bernie.geckolib3.geo.render.GeoBuilder;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.util.json.JsonAnimationUtils;
 
-public class CosmeticAssetsLoaderThread extends FileDownloaderThread {
+public class CosmeticAssetsLoaderThread extends AbstractFileDownloaderThread {
     private RemoteCosmetic cosmetic;
     private CosmeticData data;
     private MolangParser parser = new MolangParser();

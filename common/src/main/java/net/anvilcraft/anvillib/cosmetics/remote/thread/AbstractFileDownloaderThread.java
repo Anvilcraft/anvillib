@@ -15,12 +15,12 @@ import com.google.gson.JsonSyntaxException;
 
 import net.anvilcraft.anvillib.AnvilLib;
 
-public abstract class FileDownloaderThread implements Runnable {
+public abstract class AbstractFileDownloaderThread implements Runnable {
     protected Gson gson = new GsonBuilder().create();
     protected HttpClient client = HttpClient.newBuilder().build();
     protected final String version;
 
-    public FileDownloaderThread(String version) {
+    public AbstractFileDownloaderThread(String version) {
         this.version = version;
     }
 

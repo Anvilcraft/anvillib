@@ -6,7 +6,7 @@ import java.net.URI;
 import net.anvilcraft.anvillib.cosmetics.remote.RemoteCosmeticProvider;
 import net.anvilcraft.anvillib.cosmetics.remote.model.PlayerData;
 
-public class PlayerCosmeticLoaderThread extends FileDownloaderThread {
+public class PlayerCosmeticLoaderThread extends AbstractFileDownloaderThread {
     private URI config;
     private RemoteCosmeticProvider provider;
 
@@ -30,6 +30,8 @@ public class PlayerCosmeticLoaderThread extends FileDownloaderThread {
                 this.provider.loadCape(player.cape);
                 this.provider.playerCapes.put(player.uuid, player.cape);
             }
+
+            this.provider.markDirty();
         } catch (IOException e) {
             e.printStackTrace();
         }

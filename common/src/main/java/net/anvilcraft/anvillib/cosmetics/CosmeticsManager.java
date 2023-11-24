@@ -64,8 +64,12 @@ public class CosmeticsManager {
     }
 
     public static Identifier getCape(UUID player) {
-        loadPlayer(player);
-        return capeCache.getOrDefault(player, null);
+        if (!activePlayers.contains(player)) {
+            activePlayers.add(player);
+            loadPlayer(player);
+        }
+        refresh();
+        return capeCache.get(player);
     }
 
     protected static GeoModel getModel(Identifier id) {

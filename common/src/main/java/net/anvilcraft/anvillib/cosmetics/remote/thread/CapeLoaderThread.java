@@ -16,7 +16,7 @@ import net.minecraft.client.texture.PlayerSkinTexture;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.util.Identifier;
 
-public class CapeLoaderThread extends FileDownloaderThread {
+public class CapeLoaderThread extends AbstractFileDownloaderThread {
     private String id;
     private File cacheDir;
     private URI url;

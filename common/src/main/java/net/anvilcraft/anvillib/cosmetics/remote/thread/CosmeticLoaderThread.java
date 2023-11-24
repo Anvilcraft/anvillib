@@ -8,7 +8,7 @@ import net.anvilcraft.anvillib.cosmetics.remote.RemoteCosmetic;
 import net.anvilcraft.anvillib.cosmetics.remote.RemoteCosmeticProvider;
 import net.anvilcraft.anvillib.cosmetics.remote.model.CosmeticData;
 
-public class CosmeticLoaderThread extends FileDownloaderThread {
+public class CosmeticLoaderThread extends AbstractFileDownloaderThread {
     private URI url;
     private RemoteCosmeticProvider provider;
 
