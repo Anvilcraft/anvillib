@@ -112,7 +112,7 @@ public class CosmeticArmorRenderer extends BipedEntityModel<PlayerEntity>
         poseStack.translate(0, 24 / 16F, 0);
         poseStack.scale(-1, -1, 1);
 
-        double currentTick = entityLiving.age; // TODO: Custom frametime/animation speed
+        double currentTick = entityLiving.age / this.getCurrentCosmetic().getFrameTime();
         currentFrame
             = ((int) (currentTick * 1.0F)) % this.getCurrentCosmetic().getTotalFrames();
         ;

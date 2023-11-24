@@ -46,4 +46,11 @@ public interface ICosmetic {
     default int getTotalFrames() {
         return 1;
     }
+
+    /**
+     * Returns how many ticks a frame of the animation should take.
+     */
+    default int getFrameTime() {
+        return 1;
+    }
 }

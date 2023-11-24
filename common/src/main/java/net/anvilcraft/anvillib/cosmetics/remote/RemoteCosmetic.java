@@ -19,6 +19,7 @@ public class RemoteCosmetic implements ICosmetic {
     private Identifier animationsLocation;
     private CosmeticParts parts = new CosmeticParts();
     private String idleAnimation = null;
+    private int frameTime = 1;
     private int frameCount = 1;
 
     public RemoteCosmetic(String id) {
@@ -61,6 +62,7 @@ public class RemoteCosmetic implements ICosmetic {
 
     public void loadTexture(TextureData data) {
         this.frameCount = data.frameCount;
+        this.frameTime = data.frameTime;
         this.loadedTexture = true;
     }
 
@@ -112,5 +114,10 @@ public class RemoteCosmetic implements ICosmetic {
     @Override
     public int getTotalFrames() {
         return this.frameCount;
+    }
+
+    @Override
+    public int getFrameTime() {
+        return this.frameTime;
     }
 }
