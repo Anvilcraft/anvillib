@@ -3,9 +3,11 @@
     "package": "net.anvilcraft.anvillib.mixin.forge",
     "compatibilityLevel": "JAVA_17",
     "minVersion": "0.8",
-    "client": [],
-    "mixins": [
+    "client": [
         "accessor.AddLayersAccessor"
+    ],
+    "mixins": [
+        "common.BeardifierMixin"
     ],
     "injectors": {
         "defaultRequire": 1

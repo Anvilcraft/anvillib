@@ -26,17 +26,28 @@ public class AdvancedStructurePoolFeatureConfig extends StructurePoolFeatureConf
                               (self)
                                   -> ((AdvancedStructurePoolFeatureConfig) self)
                                          .maxDistanceFromCenter
-                          )
+                          ),
+                        Codec.BOOL.fieldOf("use_box_beardifier").forGetter(
+                            (self) -> ((AdvancedStructurePoolFeatureConfig) self).useBoxBeardifier
+                        )
                   )
                   .apply(instance, AdvancedStructurePoolFeatureConfig::new);
           });
 
     public final int maxDistanceFromCenter;
+    public final boolean useBoxBeardifier;
+
+    public AdvancedStructurePoolFeatureConfig(
+        RegistryEntry<StructurePool> startPool, int size, int maxDistanceFromCenter, boolean useBoxBeardifier
+    ) {
+        super(startPool, size);
+        this.maxDistanceFromCenter = maxDistanceFromCenter;
+        this.useBoxBeardifier = useBoxBeardifier;
+    }
 
     public AdvancedStructurePoolFeatureConfig(
         RegistryEntry<StructurePool> startPool, int size, int maxDistanceFromCenter
     ) {
-        super(startPool, size);
-        this.maxDistanceFromCenter = maxDistanceFromCenter;
+        this(startPool, size, maxDistanceFromCenter, false);
     }
 }
