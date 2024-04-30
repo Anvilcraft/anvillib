@@ -36,6 +36,9 @@ configurations {
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
     runDir = "run"
+
+    replaceIn "net/anvilcraft/anvillib/AnvilLib.java"
+    replace "{VERSION}", project.version
 }
 
 repositories {
@@ -54,6 +57,10 @@ jar {
     from (configurations.embedded.collect { it.isDirectory() ? it : zipTree(it) }) {
        duplicatesStrategy = 'exclude'
        exclude 'LICENSE.txt', 'META-INF/MANIFSET.MF', 'META-INF/maven/**', 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/services/*.Processor', 'META-INF/versions/**'
+    }
+
+    manifest {
+        attributes "FMLAT": "anvillib_at.cfg"
     }
 }
 
