@@ -10,7 +10,6 @@ import org.apache.commons.io.IOUtils;
 import net.minecraftforge.common.MinecraftForge;
 
 public class Capes {
-    
     private static boolean capesInitialized = false;
 
     public static void initCapes() {
@@ -21,14 +20,11 @@ public class Capes {
                 InputStream stream = DevCapes.getInstance().getStreamForURL(index);
                 String capeConfig = IOUtils.toString(stream);
                 stream.close();
-                DevCapes.getInstance().registerConfig(
-                    capeConfig
-                );
+                DevCapes.getInstance().registerConfig(capeConfig);
                 MinecraftForge.EVENT_BUS.register(new RenderEventHandler());
             } catch (Exception e) {
                 System.out.print("Cant load capes\n" + e);
             }
         }
     }
-
 }

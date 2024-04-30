@@ -1,12 +1,10 @@
 package ley.modding.tileralib.api;
 
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public interface IRegistry {
-
     String getModID();
 
     Item registerItem(Item item);
@@ -20,5 +18,4 @@ public interface IRegistry {
     void addShapedRecipe(ItemStack output, String[] pattern, IIngredient[] ingredients);
 
     void addShapelessRecipe(ItemStack output, IIngredient[] input);
-
 }
