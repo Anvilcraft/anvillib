@@ -76,6 +76,10 @@ processResources {
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'deobf'
+
+    manifest {
+        attributes "FMLAT": "anvillib_at.cfg"
+    }
 }
 
 task sourcesJar(type: Jar) {

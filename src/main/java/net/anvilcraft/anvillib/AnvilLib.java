@@ -10,9 +10,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
+import net.anvilcraft.anvillib.network.AnvilChannel;
 import net.anvilcraft.anvillib.network.PacketUpdateUserCache;
 import net.anvilcraft.anvillib.proxy.CommonProxy;
 import net.anvilcraft.anvillib.usercache.UserCache;
@@ -30,7 +28,7 @@ public class AnvilLib {
     )
     public static CommonProxy proxy;
 
-    public static SimpleNetworkWrapper channel;
+    public static AnvilChannel channel;
 
     @EventHandler
     public static void preInit(FMLPreInitializationEvent ev) {
@@ -43,14 +41,8 @@ public class AnvilLib {
             new Thread(() -> proxy.saveUserCache(UserCache.INSTANCE))
         );
 
-        channel = NetworkRegistry.INSTANCE.newSimpleChannel("anvillib");
-        int pktid = 0;
-        channel.registerMessage(
-            PacketUpdateUserCache.Handler.class,
-            PacketUpdateUserCache.class,
-            pktid++,
-            Side.CLIENT
-        );
+        channel = new AnvilChannel("anvillib");
+        channel.register(PacketUpdateUserCache.class);
     }
 
     @EventHandler

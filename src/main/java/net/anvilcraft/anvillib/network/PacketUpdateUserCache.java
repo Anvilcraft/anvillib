@@ -5,13 +5,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
+import net.anvilcraft.alec.jalec.AlecLogger;
 import net.anvilcraft.anvillib.usercache.UserCache;
 
-public class PacketUpdateUserCache implements IMessage {
+@AnvilPacket(Side.CLIENT)
+public class PacketUpdateUserCache implements IAnvilPacket {
     public Map<UUID, String> entries;
 
     public PacketUpdateUserCache(Map<UUID, String> entries) {
@@ -47,12 +48,9 @@ public class PacketUpdateUserCache implements IMessage {
         }
     }
 
-    public static class Handler
-        implements IMessageHandler<PacketUpdateUserCache, IMessage> {
-        @Override
-        public IMessage onMessage(PacketUpdateUserCache pkt, MessageContext arg1) {
-            UserCache.INSTANCE.users.putAll(pkt.entries);
-            return null;
-        }
+    @Override
+    public void handle(MessageContext ctx) {
+        UserCache.INSTANCE.users.putAll(this.entries);
+        AlecLogger.PLAIN.alec("AAAAALEEEEEC");
     }
 }
