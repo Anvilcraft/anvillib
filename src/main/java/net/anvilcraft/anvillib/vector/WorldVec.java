@@ -95,4 +95,10 @@ public class WorldVec extends Vec3 {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "WorldVec@" + this.world.provider.dimensionId + " (" + this.x + " "
+            + this.y + " " + this.z + ")";
+    }
 }

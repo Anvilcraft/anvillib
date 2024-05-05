@@ -152,4 +152,9 @@ public class Vec3 {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Vec (" + this.x + " " + this.y + " " + this.z + ")";
+    }
 }
