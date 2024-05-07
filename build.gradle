@@ -7,7 +7,7 @@ buildscript {
         }
         maven {
             name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            url = "https://oss.sonatype.orgP/content/repositories/snapshots/"
         }
     }
     dependencies {
@@ -60,7 +60,11 @@ jar {
     }
 
     manifest {
-        attributes "FMLAT": "anvillib_at.cfg"
+        attributes([
+                "FMLCorePlugin": "net.anvilcraft.anvillib.AnvilCore",
+                "FMLCorePluginContainsFMLMod": "true",
+                "FMLAT": "anvillib_at.cfg"
+        ])
     }
 }
 
@@ -78,7 +82,11 @@ task deobfJar(type: Jar) {
     classifier = 'deobf'
 
     manifest {
-        attributes "FMLAT": "anvillib_at.cfg"
+        attributes([
+                "FMLCorePlugin": "net.anvilcraft.anvillib.AnvilCore",
+                "FMLCorePluginContainsFMLMod": "true",
+                "FMLAT": "anvillib_at.cfg"
+        ])
     }
 }
 
@@ -113,4 +121,8 @@ publishing {
                 mavenLocal()
         }
     }
+}
+
+mixin {
+    mixinRefMapName = 'anvillib.refmap.json'
 }

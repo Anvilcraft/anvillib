@@ -1,0 +1,13 @@
+{
+    "package": "net.anvilcraft.anvillib.mixins",
+    "refmap": "anvillib.refmap.json",
+    "minVersion": "0.8",
+    "compatibilityLevel": "JAVA_8",
+    "mixins": [
+      "MixinTileEntity"
+    ],
+    "client": [],
+    "injectors": {
+      "defaultRequire": 1
+    }
+}
