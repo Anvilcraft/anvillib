@@ -46,7 +46,9 @@ public class AnvilLib {
     }
 
     @EventHandler
-    public static void init(FMLInitializationEvent ev) {}
+    public static void init(FMLInitializationEvent ev) {
+        proxy.init();
+    }
 
     @EventHandler
     public static void shutdown(FMLServerStoppedEvent ev) {
