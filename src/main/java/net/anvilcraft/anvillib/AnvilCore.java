@@ -20,7 +20,7 @@ public class AnvilCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[0];
+        return new String[]{"net.anvilcraft.anvillib.asm.ASMTransformer"};
     }
 
     @Override
