@@ -21,10 +21,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 public class UserCacheEventHandler {
-    @SubscribeEvent
-    public void onWorldSave(WorldEvent.Save ev) {
-        AnvilLib.proxy.saveUserCache(UserCache.INSTANCE);
-    }
 
     @SubscribeEvent
     public void onPlayerSave(PlayerEvent.SaveToFile ev) {
