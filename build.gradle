@@ -104,6 +104,18 @@ publishing {
             artifact deobfJar
             artifact sourcesJar
             artifact jar
+
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+                def mixins = dependenciesNode.appendNode('dependency')
+                mixins.appendNode('groupId', 'com.github.tox1cozZ')
+                mixins.appendNode('artifactId', 'mixin-booter-legacy')
+                mixins.appendNode('version', '1.1.2')
+                def jalec = dependenciesNode.appendNode('dependency')
+                jalec.appendNode('groupId', 'net.anvilcraft')
+                jalec.appendNode('artifactId', 'jalec')
+                jalec.appendNode('version', '0.1.2')
+            }
         }
     }
 
