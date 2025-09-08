@@ -9,6 +9,8 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import net.anvilcraft.anvillib.garbagecollection.GCManager;
 import net.anvilcraft.anvillib.network.AnvilChannel;
 import net.anvilcraft.anvillib.network.PacketUpdateUserCache;
 import net.anvilcraft.anvillib.proxy.CommonProxy;
@@ -41,5 +43,10 @@ public class AnvilLib {
     @EventHandler
     public static void init(FMLInitializationEvent ev) {
         proxy.init();
+    }
+
+    @EventHandler
+    public void onServerStop(FMLServerStoppedEvent ev) {
+        GCManager.INSTANCE.unloadWorld();
     }
 }
