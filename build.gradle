@@ -24,7 +24,7 @@ apply from: './gradle/scripts/mixins.gradle'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-version = "0.2.0"
+version = "0.3.0"
 group= "net.anvilcraft"
 archivesBaseName = "anvillib-7"
 
@@ -48,6 +48,7 @@ repositories {
 }
 
 dependencies {
+    implementation "appeng:appliedenergistics2:rv3-beta-26:dev"
     embedded "net.anvilcraft:jalec:0.1.2"
     implementation "com.github.tox1cozZ:mixin-booter-legacy:1.1.2"
     annotationProcessor "com.github.tox1cozZ:mixin-booter-legacy:1.1.2:processor"

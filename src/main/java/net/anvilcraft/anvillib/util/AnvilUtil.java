@@ -1,9 +1,11 @@
 package net.anvilcraft.anvillib.util;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagList;
@@ -38,6 +40,28 @@ public class AnvilUtil {
             ((NBTTagLong) nbt.tagList.get(0)).func_150291_c(),
             ((NBTTagLong) nbt.tagList.get(1)).func_150291_c()
         );
+    }
+
+    public static void writeStringToPacket(String s, ByteBuf buf) {
+        try {
+            byte[] bytes = s.getBytes("ISO-8859-1");
+            int length = bytes.length;
+            buf.writeInt(length);
+            buf.writeBytes(bytes);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String readStringFromPacket(ByteBuf buf) {
+        int length = buf.readInt();
+        byte[] bytes = new byte[length];
+        buf.readBytes(bytes);
+        try {
+            return new String(bytes, "ISO-8859-1");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

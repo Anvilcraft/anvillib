@@ -4,20 +4,25 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import net.anvilcraft.anvillib.ae2.AEIntegration;
+import net.anvilcraft.anvillib.energy.RFEnergyUnit;
+import net.anvilcraft.anvillib.energy.UEEnergyUnit;
 import net.anvilcraft.anvillib.garbagecollection.GCManager;
 import net.anvilcraft.anvillib.network.AnvilChannel;
 import net.anvilcraft.anvillib.network.PacketUpdateUserCache;
 import net.anvilcraft.anvillib.proxy.CommonProxy;
+import net.anvilcraft.anvillib.registries.UnitRegistry;
 import net.anvilcraft.anvillib.usercache.UserCacheEventHandler;
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = "anvillib", version = "{VERSION}", name = "AnvilLib")
+@Mod(modid = "anvillib", version = "{VERSION}", name = "AnvilLib", dependencies = "before:appliedenergistics2@[rv3-beta-26,)")
 public class AnvilLib {
     public static final Logger LOGGER = LogManager.getLogger("AnvilLib");
 
@@ -43,6 +48,11 @@ public class AnvilLib {
     @EventHandler
     public static void init(FMLInitializationEvent ev) {
         proxy.init();
+        UnitRegistry.INSTANCE.register(new UEEnergyUnit());
+        UnitRegistry.INSTANCE.register(new RFEnergyUnit());
+        if (Loader.isModLoaded("appliedenergistics2")) {
+            AEIntegration.load();
+        }
     }
 
     @EventHandler
