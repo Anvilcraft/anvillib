@@ -15,6 +15,8 @@ import net.anvilcraft.anvillib.ae2.AEIntegration;
 import net.anvilcraft.anvillib.energy.RFEnergyUnit;
 import net.anvilcraft.anvillib.energy.UEEnergyUnit;
 import net.anvilcraft.anvillib.garbagecollection.GCManager;
+import net.anvilcraft.anvillib.inject.InjectionHandler;
+import net.anvilcraft.anvillib.inject.TargetDiscoverer;
 import net.anvilcraft.anvillib.network.AnvilChannel;
 import net.anvilcraft.anvillib.network.PacketUpdateUserCache;
 import net.anvilcraft.anvillib.proxy.CommonProxy;
@@ -40,6 +42,15 @@ public class AnvilLib {
         UserCacheEventHandler uceh = new UserCacheEventHandler();
         MinecraftForge.EVENT_BUS.register(uceh);
         FMLCommonHandler.instance().bus().register(uceh);
+        
+        InjectionHandler injectionHandler = new InjectionHandler();
+        TargetDiscoverer targetDiscoverer = new TargetDiscoverer(ev.getAsmData());
+        targetDiscoverer.getInjectionTargets().forEach(injectionHandler::addTarget);
+        targetDiscoverer.getSingletonImplementations().forEach(injectionHandler::addInstance);
+        injectionHandler.populateModInstances();
+        injectionHandler.initializeSingletons();
+        injectionHandler.injectSelf();
+        injectionHandler.injectSingletons();
 
         channel = new AnvilChannel("anvillib");
         channel.register(PacketUpdateUserCache.class);
