@@ -1,18 +1,17 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.gradleup.shadow"
 }
 
 architectury {
     platformSetupLoomIde()
-    forge()
+    neoForge()
 }
 
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 
-    forge {
-        convertAccessWideners = true
-        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+    neoForge {
+        convertAccessWideners(tasks.named("jar"), loom.accessWidenerPath.get().getAsFile().name)
 
         mixinConfig "anvillib-common.mixins.json"
         mixinConfig "anvillib.mixins.json"
@@ -20,40 +19,50 @@ loom {
 }
 
 configurations {
-    common
-    shadowCommon // Don't use shadow from the shadow plugin since it *excludes* files.
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentForge.extendsFrom common
+    shadowBundle {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+repositories {
+    maven {
+        name = 'NeoForged'
+        url = 'https://maven.neoforged.net/releases'
+    }
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.forge_version}"
+    forge "net.neoforged:neoforge:$rootProject.neoforge_version"
 
-    modImplementation "software.bernie.geckolib:geckolib-forge-1.18:3.0.57"
+    modImplementation "software.bernie.geckolib:geckolib-forge-1.21.1:4.9.1"
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+    common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
+    shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
 }
 
 processResources {
     inputs.property "version", project.version
 
-    filesMatching("META-INF/mods.toml") {
+    filesMatching("META-INF/neoforge.mods.toml") {
         expand "version": project.version
     }
 }
 
 shadowJar {
-    exclude "fabric.mod.json"
-    exclude "architectury.common.json"
-
-    configurations = [project.configurations.shadowCommon]
+    configurations = [project.configurations.shadowBundle]
     archiveClassifier = "dev-shadow"
 }
 
 remapJar {
-    input.set shadowJar.archiveFile
+    inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
 }
 

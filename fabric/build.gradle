@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.gradleup.shadow"
 }
 
 architectury {
@@ -12,20 +12,26 @@ loom {
 }
 
 configurations {
-    common
-    shadowCommon // Don't use shadow from the shadow plugin since it *excludes* files.
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentFabric.extendsFrom common
+    shadowBundle {
+        canBeResolved = true
+        canBeConsumed = false
+    }
 }
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
-    modImplementation "software.bernie.geckolib:geckolib-fabric-1.18:3.0.80"
+    modImplementation "software.bernie.geckolib:geckolib-fabric-1.21.1:4.9.1"
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+    common(project(path: ":common", configuration: "namedElements")) { transitive = false }
+    shadowBundle project(path: ":common", configuration: "transformProductionFabric")
 }
 
 processResources {
@@ -39,7 +45,7 @@ processResources {
 shadowJar {
     exclude "architectury.common.json"
 
-    configurations = [project.configurations.shadowCommon]
+    configurations = [project.configurations.shadowBundle]
     archiveClassifier = "dev-shadow"
 }
 
