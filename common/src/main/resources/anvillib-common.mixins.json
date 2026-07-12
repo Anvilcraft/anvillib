@@ -9,7 +9,6 @@
     ],
     "mixins": [
         "accessor.AnimatedGeoModelAccessor",
-        "common.RecipeManagerMixin",
         "common.StructurePoolBasedGeneratorMixin"
     ],
     "injectors": {

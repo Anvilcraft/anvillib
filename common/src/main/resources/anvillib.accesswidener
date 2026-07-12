@@ -8,5 +8,10 @@ accessible field net/minecraft/recipe/Ingredient$TagEntry tag Lnet/minecraft/tag
 accessible class net/minecraft/recipe/Ingredient$StackEntry
 accessible field net/minecraft/recipe/Ingredient$StackEntry stack Lnet/minecraft/item/ItemStack;
 
+accessible field net/minecraft/recipe/RecipeManager recipes Ljava/util/Map;
+mutable field net/minecraft/recipe/RecipeManager recipes Ljava/util/Map;
+accessible field net/minecraft/recipe/RecipeManager recipesById Ljava/util/Map;
+mutable field net/minecraft/recipe/RecipeManager recipesById Ljava/util/Map;
+
 accessible method net/minecraft/client/render/entity/LivingEntityRenderer addFeature (Lnet/minecraft/client/render/entity/feature/FeatureRenderer;)Z
 
