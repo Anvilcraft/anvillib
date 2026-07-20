@@ -29,7 +29,7 @@ side = "BOTH"
 
 [[dependencies.anvillib]]
 modId = "geckolib3"
-mandatory = true
+mandatory = false
 versionRange = "[3.0.57,)"
 ordering = "NONE"
 side = "BOTH"

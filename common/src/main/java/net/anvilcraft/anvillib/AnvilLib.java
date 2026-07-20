@@ -20,7 +20,9 @@ public class AnvilLib {
     public static final Logger LOGGER = LogManager.getLogger();
 
     public static void initialize() {
-        GeckoLib.initialize();
+        if (Compat.hasGeckolib()) {
+            GeckoLib.initialize();
+        }
         Bus.MAIN.register(ApplyRecipesEvent.class, (event) -> {
             Map<RecipeType<?>, Map<Identifier, Recipe<?>>> recipes = new HashMap<>();
             event.recipeManager().recipes.forEach((k, v) -> recipes.put(k, new HashMap<>(v)));

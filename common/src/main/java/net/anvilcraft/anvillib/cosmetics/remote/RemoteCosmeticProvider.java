@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 import net.anvilcraft.anvillib.AnvilLib;
+import net.anvilcraft.anvillib.Compat;
 import net.anvilcraft.anvillib.cosmetics.ICosmetic;
 import net.anvilcraft.anvillib.cosmetics.ICosmeticProvider;
 import net.anvilcraft.anvillib.cosmetics.remote.model.CosmeticData;
@@ -91,6 +92,9 @@ public class RemoteCosmeticProvider implements ICosmeticProvider {
     }
 
     public void loadCosmetic(String id) throws MalformedURLException {
+        if (!Compat.hasGeckolib()) {
+            return;
+        }
         if (this.cosmetics.containsKey(id) || this.knownCosmetics.containsKey(id))
             return;
         this.knownCosmetics.put(id, true);
@@ -99,6 +103,9 @@ public class RemoteCosmeticProvider implements ICosmeticProvider {
     }
 
     public void loadAssets(CosmeticData data, RemoteCosmetic cosmetic) {
+        if (!Compat.hasGeckolib()) {
+            return;
+        }
         Util.getMainWorkerExecutor().execute(
             new CosmeticAssetsLoaderThread(cosmetic, data, this.cacheDir, this)
         );

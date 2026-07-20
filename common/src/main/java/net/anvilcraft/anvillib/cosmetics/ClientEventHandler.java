@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Map.Entry;
 
 import net.anvilcraft.anvillib.AnvilLib;
+import net.anvilcraft.anvillib.Compat;
 import net.anvilcraft.anvillib.cosmetics.remote.RemoteCosmeticProvider;
 import net.anvilcraft.anvillib.event.AddEntityRenderLayersEvent;
 import net.anvilcraft.anvillib.event.Bus;
@@ -38,6 +39,8 @@ public class ClientEventHandler implements IEventBusRegisterable {
 
     @Override
     public void registerEventHandlers(Bus bus) {
-        bus.register(AddEntityRenderLayersEvent.class, this::onAddLayers);
+        if (Compat.hasGeckolib()) {
+            bus.register(AddEntityRenderLayersEvent.class, this::onAddLayers);
+        }
     }
 }
