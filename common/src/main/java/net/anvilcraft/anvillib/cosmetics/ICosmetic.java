@@ -1,13 +1,13 @@
 package net.anvilcraft.anvillib.cosmetics;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public interface ICosmetic {
-    Identifier getAnimationFileLocation();
+    ResourceLocation getAnimationFileLocation();
 
-    Identifier getModelLocation();
+    ResourceLocation getModelLocation();
 
-    Identifier getTextureLocation();
+    ResourceLocation getTextureLocation();
 
     default String getHead() {
         return null; //head
@@ -41,7 +41,7 @@ public interface ICosmetic {
         return true;
     }
 
-    Identifier getID();
+    ResourceLocation getID();
 
     default int getTotalFrames() {
         return 1;

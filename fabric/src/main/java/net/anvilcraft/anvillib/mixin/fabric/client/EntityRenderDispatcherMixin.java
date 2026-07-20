@@ -10,18 +10,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.anvilcraft.anvillib.event.AddEntityRenderLayersEvent;
 import net.anvilcraft.anvillib.event.Bus;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.resource.ResourceManager;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.entity.player.Player;
 
 @Mixin(EntityRenderDispatcher.class)
 public class EntityRenderDispatcherMixin {
     @Shadow
-    private Map<String, EntityRenderer<? extends PlayerEntity>> modelRenderers;
+    private Map<PlayerSkin.Model, EntityRenderer<? extends Player>> playerRenderers;
 
-    @Inject(method = "reload", at = @At("TAIL"))
+    @Inject(method = "onResourceManagerReload", at = @At("TAIL"))
     public void onReload(ResourceManager alec, CallbackInfo ci) {
-        Bus.MAIN.fire(new AddEntityRenderLayersEvent(this.modelRenderers));
+        Bus.MAIN.fire(new AddEntityRenderLayersEvent(this.playerRenderers));
     }
 }

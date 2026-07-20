@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import net.anvilcraft.anvillib.Util;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class InputReplaceRecipeMapper implements IRecipeMapper {
     public Map<Predicate<Ingredient>, Ingredient> replacements = new HashMap<>();
@@ -29,11 +29,9 @@ public class InputReplaceRecipeMapper implements IRecipeMapper {
     }
 
     @Override
-    public boolean shouldMap(Recipe<?> recipe) {
-        var ingredients = recipe.getIngredients();
-        if (ingredients == null)
-            return false;
-
+    public boolean shouldMap(RecipeHolder<?> holder) {
+        var ingredients = holder.value().getIngredients();
+        if (ingredients == null) return false;
         for (var k : this.replacements.keySet())
             if (ingredients.stream().anyMatch(k))
                 return true;
@@ -41,14 +39,14 @@ public class InputReplaceRecipeMapper implements IRecipeMapper {
     }
 
     @Override
-    public Recipe<?> apply(Recipe<?> recipe) {
-        var ingredients = recipe.getIngredients();
+    public RecipeHolder<?> apply(RecipeHolder<?> holder) {
+        var ingredients = holder.value().getIngredients();
         for (int i = 0; i < ingredients.size(); i++) {
             var ing = ingredients.get(i);
             for (var entry : this.replacements.entrySet())
                 if (entry.getKey().test(ing))
                     ingredients.set(i, entry.getValue());
         }
-        return recipe;
+        return holder;
     }
 }

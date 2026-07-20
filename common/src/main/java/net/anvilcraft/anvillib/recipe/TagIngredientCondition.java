@@ -1,18 +1,18 @@
 package net.anvilcraft.anvillib.recipe;
 
-import net.minecraft.recipe.Ingredient.Entry;
-import net.minecraft.recipe.Ingredient.TagEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.crafting.Ingredient.Value;
+import net.minecraft.world.item.crafting.Ingredient.TagValue;
+import net.minecraft.resources.ResourceLocation;
 
 public class TagIngredientCondition extends AbstractIngredientCondition {
-    public Identifier id;
+    public ResourceLocation id;
 
-    public TagIngredientCondition(Identifier id) {
+    public TagIngredientCondition(ResourceLocation id) {
         this.id = id;
     }
 
     @Override
-    public boolean entryMatches(Entry e) {
-        return e instanceof TagEntry te && te.tag.id().equals(this.id);
+    public boolean entryMatches(Value e) {
+        return e instanceof TagValue te && te.tag().location().equals(this.id);
     }
 }

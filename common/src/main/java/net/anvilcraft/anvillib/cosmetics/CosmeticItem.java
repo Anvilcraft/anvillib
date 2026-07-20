@@ -1,46 +1,45 @@
 package net.anvilcraft.anvillib.cosmetics;
 
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class CosmeticItem implements IAnimatable {
-    private ICosmetic cosmetic = null;
-    private AnimationBuilder animationBuilder = new AnimationBuilder();
+public class CosmeticItem implements GeoAnimatable {
+    private final ICosmetic cosmetic;
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final RawAnimation idleAnimation;
 
     public CosmeticItem(ICosmetic cosmetic) {
         this.cosmetic = cosmetic;
         if (cosmetic.getIdleAnimationName() != null) {
-            this.animationBuilder.addAnimation(
-                cosmetic.getIdleAnimationName(), EDefaultLoopTypes.LOOP
-            );
+            this.idleAnimation = RawAnimation.begin().thenLoop(cosmetic.getIdleAnimationName());
+        } else {
+            this.idleAnimation = null;
         }
     }
 
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
-        event.getController().transitionLengthTicks = 0;
-        event.getController().setAnimation(animationBuilder);
-        return PlayState.CONTINUE;
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar registrar) {
+        if (this.idleAnimation != null) {
+            registrar.add(new AnimationController<>(this, "controller", 0, state -> {
+                state.getController().setAnimation(this.idleAnimation);
+                return PlayState.CONTINUE;
+            }));
+        }
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(
-            new AnimationController<>(this, "controller", 20, this::predicate)
-        );
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 
-    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
-
     @Override
-    public AnimationFactory getFactory() {
-        return this.factory;
+    public double getTick(Object entity) {
+        return 0;
     }
 
     public ICosmetic getCosmetic() {

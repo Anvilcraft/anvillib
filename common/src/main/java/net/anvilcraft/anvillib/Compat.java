@@ -7,7 +7,7 @@ public class Compat {
     public static boolean hasGeckolib() {
         if (hasGeckolib == null) {
             try {
-                Class.forName("software.bernie.geckolib3.GeckoLib");
+                Class.forName("software.bernie.geckolib.GeckoLib");
                 hasGeckolib = true;
             } catch (ClassNotFoundException e) {
                 hasGeckolib = false;

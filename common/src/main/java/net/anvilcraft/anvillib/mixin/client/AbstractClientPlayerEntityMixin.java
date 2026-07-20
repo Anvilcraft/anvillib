@@ -1,42 +1,30 @@
 package net.anvilcraft.anvillib.mixin.client;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-
-import com.mojang.authlib.GameProfile;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.anvilcraft.anvillib.cosmetics.CosmeticsManager;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.resources.ResourceLocation;
 
-@Mixin(AbstractClientPlayerEntity.class)
-public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity {
-    private static Identifier ELYTRA = new Identifier("textures/entity/elytra.png");
+@Mixin(AbstractClientPlayer.class)
+public abstract class AbstractClientPlayerEntityMixin {
+    private static ResourceLocation ELYTRA = ResourceLocation.withDefaultNamespace("textures/entity/elytra.png");
 
-    public AbstractClientPlayerEntityMixin(
-        World world, BlockPos pos, float yaw, GameProfile profile
-    ) {
-        super(world, pos, yaw, profile);
-    }
-
-    /**
-     * @reason Custom capes & no Mojank capes
-     * @author tilera
-     */
-    @Overwrite
-    public Identifier getCapeTexture() {
-        return CosmeticsManager.getCape(this.uuid);
-    }
-
-    /**
-     * @reason Custom capes & no Mojank capes
-     * @author tilera
-     */
-    @Overwrite
-    public Identifier getElytraTexture() {
-        return ELYTRA;
+    @Inject(method = "getSkin", at = @At("RETURN"), cancellable = true)
+    private void getSkin(CallbackInfoReturnable<PlayerSkin> cir) {
+        AbstractClientPlayer self = (AbstractClientPlayer) (Object) this;
+        PlayerSkin original = cir.getReturnValue();
+        cir.setReturnValue(new PlayerSkin(
+                original.texture(),
+                original.textureUrl(),
+                CosmeticsManager.getCape(self.getUUID()),
+                ELYTRA,
+                original.model(),
+                original.secure()
+        ));
     }
 }

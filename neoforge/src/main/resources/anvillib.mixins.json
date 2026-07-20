@@ -1,12 +1,9 @@
 {
     "required": true,
-    "package": "net.anvilcraft.anvillib.mixin",
+    "package": "net.anvilcraft.anvillib.mixin.neoforge",
     "compatibilityLevel": "JAVA_21",
     "minVersion": "0.8",
-    "client": [
-        "client.MinecraftClientMixin",
-        "client.AbstractClientPlayerEntityMixin"
-    ],
+    "client": [],
     "mixins": [],
     "injectors": {
         "defaultRequire": 1

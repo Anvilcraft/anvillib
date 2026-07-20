@@ -1,37 +1,36 @@
 package net.anvilcraft.anvillib;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import net.anvilcraft.anvillib.event.ApplyRecipesEvent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.anvilcraft.anvillib.cosmetics.ClientEventHandler;
+import net.anvilcraft.anvillib.event.ApplyRecipesEvent;
 import net.anvilcraft.anvillib.event.Bus;
 import net.anvilcraft.anvillib.recipe.RecipesEvent;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib3.GeckoLib;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AnvilLib {
     public static final String MODID = "anvillib";
     public static final Logger LOGGER = LogManager.getLogger();
 
-    public static void initialize() {
-        if (Compat.hasGeckolib()) {
-            GeckoLib.initialize();
-        }
+    public static String VERSION = null;
+
+    public static void initialize(String version) {
+        VERSION = version;
         Bus.MAIN.register(ApplyRecipesEvent.class, (event) -> {
-            Map<RecipeType<?>, Map<Identifier, Recipe<?>>> recipes = new HashMap<>();
-            event.recipeManager().recipes.forEach((k, v) -> recipes.put(k, new HashMap<>(v)));
+            Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> recipes = new HashMap<>();
+            event.recipeManager().byType.forEach((type, holder) ->
+                    recipes.computeIfAbsent(type, v -> new HashMap<>()).put(holder.id(), holder)
+            );
 
-            var ev = new RecipesEvent(recipes, new HashMap<>(event.recipeManager().recipesById));
+            var ev = new RecipesEvent(recipes, new HashMap<>(event.recipeManager().byName));
             Bus.MAIN.fire(ev);
-
-            event.recipeManager().recipes = ev.recipes;
-            event.recipeManager().recipesById = ev.recipesById;
+            event.recipeManager().replaceRecipes(ev.recipesById.values());
         });
     }
 

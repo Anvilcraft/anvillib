@@ -5,48 +5,50 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
 
 public class RecipesEvent {
-    public Map<RecipeType<?>, Map<Identifier, Recipe<?>>> recipes;
-    public Map<Identifier, Recipe<?>> recipesById;
+    public Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> recipes;
+    public Map<ResourceLocation, RecipeHolder<?>> recipesById;
 
     public RecipesEvent(
-        Map<RecipeType<?>, Map<Identifier, Recipe<?>>> recipes,
-        Map<Identifier, Recipe<?>> recipesById
+        Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> recipes,
+        Map<ResourceLocation, RecipeHolder<?>> recipesById
     ) {
         this.recipes = recipes;
         this.recipesById = recipesById;
     }
 
-    public void registerRecipe(Recipe<?> recipe) {
-        if (!this.recipes.containsKey(recipe.getType()))
-            this.recipes.put(recipe.getType(), new HashMap<>());
+    public void registerRecipe(RecipeHolder<?> recipe) {
+        if (!this.recipes.containsKey(recipe.value().getType()))
+            this.recipes.put(recipe.value().getType(), new HashMap<>());
 
-        this.recipes.get(recipe.getType()).put(recipe.getId(), recipe);
-        this.recipesById.put(recipe.getId(), recipe);
+        this.recipes.get(recipe.value().getType()).put(recipe.id(), recipe);
+        this.recipesById.put(recipe.id(), recipe);
     }
 
-    public Optional<Recipe<?>> removeRecipeID(Identifier id) {
+    public Optional<RecipeHolder<?>> removeRecipeID(ResourceLocation id) {
         if (this.recipesById.containsKey(id)) {
             return Optional.of(
-                this.recipes.get(this.recipesById.remove(id).getType()).remove(id)
+                this.recipes.get(this.recipesById.remove(id).value().getType()).remove(id)
             );
         }
 
         return Optional.empty();
     }
 
-    public void removeRecipesMatching(Predicate<Recipe<?>> p) {
+    public void removeRecipesMatching(Predicate<RecipeHolder<?>> p) {
         var iter = this.recipesById.entrySet().iterator();
         while (iter.hasNext()) {
             var entry = iter.next();
             if (p.test(entry.getValue())) {
                 iter.remove();
-                this.recipes.get(entry.getValue().getType()).remove(entry.getKey());
+                this.recipes.get(entry.getValue().value().getType()).remove(entry.getKey());
             }
         }
     }
@@ -59,14 +61,14 @@ public class RecipesEvent {
                 var mapped = mapper.apply(entry.getValue());
                 if (mapped != entry.getValue()) {
                     iter.remove();
-                    this.recipes.get(entry.getValue().getType()).remove(entry.getKey());
+                    this.recipes.get(entry.getValue().value().getType()).remove(entry.getKey());
                     this.registerRecipe(mapped);
                 }
             }
         }
     }
 
-    public void mapRecipeID(Identifier id, Function<Recipe<?>, Recipe<?>> func) {
+    public void mapRecipeID(ResourceLocation id, Function<RecipeHolder<?>, RecipeHolder<?>> func) {
         var recipe = this.recipesById.get(id);
         if (recipe != null) {
             var mapped = func.apply(recipe);

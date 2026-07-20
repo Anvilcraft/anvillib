@@ -30,7 +30,7 @@ public abstract class AbstractFileDownloaderThread implements Runnable {
             .uri(url)
             .header("User-Agent", System.getProperty("java.version"))
             .header("X-AnvilLib-Version", this.version)
-            .header("X-Minecraft-Version", "1.18.2")
+            .header("X-Minecraft-Version", "1.21.1")
             .build();
     }
 

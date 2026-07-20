@@ -5,47 +5,47 @@ import net.anvilcraft.anvillib.cosmetics.ICosmetic;
 import net.anvilcraft.anvillib.cosmetics.remote.model.AnimationData;
 import net.anvilcraft.anvillib.cosmetics.remote.model.TextureData;
 import net.anvilcraft.anvillib.cosmetics.CosmeticParts;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib3.file.AnimationFile;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
+import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.loading.object.BakedAnimations;
 
 public class RemoteCosmetic implements ICosmetic {
-    private Identifier id;
+    private ResourceLocation id;
     private boolean loadedModel = false;
     private boolean loadedTexture = false;
     private boolean loadedAnimations = false;
-    private Identifier modelLocation;
-    private Identifier textureLocation;
-    private Identifier animationsLocation;
+    private ResourceLocation modelLocation;
+    private ResourceLocation textureLocation;
+    private ResourceLocation animationsLocation;
     private CosmeticParts parts = new CosmeticParts();
     private String idleAnimation = null;
     private int frameTime = 1;
     private int frameCount = 1;
 
     public RemoteCosmetic(String id) {
-        this.id = new Identifier("anvillib", id);
-        this.modelLocation = new Identifier("anvillib", "models/remote/" + id);
-        this.textureLocation = new Identifier("anvillib", "textures/remote/" + id);
-        this.animationsLocation = new Identifier("anvillib", "animations/remote/" + id);
+        this.id = ResourceLocation.fromNamespaceAndPath("anvillib", id);
+        this.modelLocation = ResourceLocation.fromNamespaceAndPath("anvillib", "models/remote/" + id);
+        this.textureLocation = ResourceLocation.fromNamespaceAndPath("anvillib", "textures/remote/" + id);
+        this.animationsLocation = ResourceLocation.fromNamespaceAndPath("anvillib", "animations/remote/" + id);
     }
 
     @Override
-    public Identifier getAnimationFileLocation() {
+    public ResourceLocation getAnimationFileLocation() {
         return this.animationsLocation;
     }
 
     @Override
-    public Identifier getModelLocation() {
+    public ResourceLocation getModelLocation() {
         return this.modelLocation;
     }
 
     @Override
-    public Identifier getTextureLocation() {
+    public ResourceLocation getTextureLocation() {
         return this.textureLocation;
     }
 
     @Override
-    public Identifier getID() {
+    public ResourceLocation getID() {
         return this.id;
     }
 
@@ -54,7 +54,7 @@ public class RemoteCosmetic implements ICosmetic {
         return this.loadedModel && this.loadedTexture && this.loadedAnimations;
     }
 
-    public void loadModel(GeoModel model) {
+    public void loadModel(BakedGeoModel model) {
         CosmeticsManager.loadModel(this.modelLocation, model);
         this.parts = new CosmeticParts(model);
         this.loadedModel = true;
@@ -66,7 +66,7 @@ public class RemoteCosmetic implements ICosmetic {
         this.loadedTexture = true;
     }
 
-    public void loadAnimations(AnimationFile file, AnimationData data) {
+    public void loadAnimations(BakedAnimations file, AnimationData data) {
         if (data == null || file == null) {
             this.animationsLocation = null;
         } else {

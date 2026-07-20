@@ -1,8 +1,8 @@
 package net.anvilcraft.anvillib.recipe;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient.Entry;
-import net.minecraft.recipe.Ingredient.StackEntry;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient.Value;
+import net.minecraft.world.item.crafting.Ingredient.ItemValue;
 
 public class StackIngredientCondition extends AbstractIngredientCondition {
     public ItemStack stack;
@@ -12,7 +12,7 @@ public class StackIngredientCondition extends AbstractIngredientCondition {
     }
 
     @Override
-    public boolean entryMatches(Entry e) {
-        return e instanceof StackEntry se && se.stack.isItemEqual(this.stack);
+    public boolean entryMatches(Value e) {
+        return e instanceof ItemValue se && ItemStack.isSameItem(se.item(), this.stack);
     }
 }

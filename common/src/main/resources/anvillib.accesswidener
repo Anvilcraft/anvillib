@@ -1,17 +1,11 @@
 accessWidener v2 named
 # vim: ft=conf
 
-accessible class net/minecraft/recipe/Ingredient$Entry
-accessible field net/minecraft/recipe/Ingredient entries [Lnet/minecraft/recipe/Ingredient$Entry;
-accessible class net/minecraft/recipe/Ingredient$TagEntry
-accessible field net/minecraft/recipe/Ingredient$TagEntry tag Lnet/minecraft/tag/TagKey;
-accessible class net/minecraft/recipe/Ingredient$StackEntry
-accessible field net/minecraft/recipe/Ingredient$StackEntry stack Lnet/minecraft/item/ItemStack;
-
-accessible field net/minecraft/recipe/RecipeManager recipes Ljava/util/Map;
-mutable field net/minecraft/recipe/RecipeManager recipes Ljava/util/Map;
-accessible field net/minecraft/recipe/RecipeManager recipesById Ljava/util/Map;
-mutable field net/minecraft/recipe/RecipeManager recipesById Ljava/util/Map;
-
-accessible method net/minecraft/client/render/entity/LivingEntityRenderer addFeature (Lnet/minecraft/client/render/entity/feature/FeatureRenderer;)Z
-
+accessible method net/minecraft/client/renderer/entity/LivingEntityRenderer addLayer (Lnet/minecraft/client/renderer/entity/layers/RenderLayer;)Z
+accessible class net/minecraft/world/item/crafting/Ingredient$Value
+accessible class net/minecraft/world/item/crafting/Ingredient$ItemValue
+accessible class net/minecraft/world/item/crafting/Ingredient$TagValue
+accessible field net/minecraft/world/item/crafting/Ingredient values [Lnet/minecraft/world/item/crafting/Ingredient$Value;
+accessible field net/minecraft/world/item/crafting/Ingredient$TagValue tag Lnet/minecraft/tags/TagKey;
+accessible field net/minecraft/world/item/crafting/RecipeManager byType Lcom/google/common/collect/Multimap;
+accessible field net/minecraft/world/item/crafting/RecipeManager byName Ljava/util/Map;

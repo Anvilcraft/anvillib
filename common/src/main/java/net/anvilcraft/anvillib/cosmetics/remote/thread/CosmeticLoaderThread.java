@@ -13,7 +13,7 @@ public class CosmeticLoaderThread extends AbstractFileDownloaderThread {
     private RemoteCosmeticProvider provider;
 
     public CosmeticLoaderThread(URI url, RemoteCosmeticProvider provider) {
-        super("0.2.0");
+        super(AnvilLib.VERSION);
         this.url = url;
         this.provider = provider;
     }

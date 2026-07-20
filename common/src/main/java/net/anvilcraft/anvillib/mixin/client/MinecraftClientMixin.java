@@ -6,13 +6,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.At;
 
 import net.anvilcraft.anvillib.cosmetics.ClientEventHandler;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.RunArgs;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.main.GameConfig;
 
-@Mixin(MinecraftClient.class)
+@Mixin(Minecraft.class)
 public class MinecraftClientMixin {
     @Inject(at = @At("RETURN"), method = "<init>")
-    public void init(RunArgs args, CallbackInfo info) {
-        ClientEventHandler.registerRemoteCosmetics(args.directories.assetDir);
+    public void init(GameConfig args, CallbackInfo info) {
+        ClientEventHandler.registerRemoteCosmetics(args.location.assetDirectory);
     }
 }

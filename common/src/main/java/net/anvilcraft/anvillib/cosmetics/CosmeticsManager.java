@@ -7,20 +7,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib3.file.AnimationFile;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
+import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.cache.GeckoLibCache;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.loading.object.BakedAnimations;
 
 public class CosmeticsManager {
     private static List<ICosmeticProvider> providers = new ArrayList<>();
     private static Map<UUID, List<ICosmetic>> cosmeticCache = new HashMap<>();
-    private static Map<UUID, Identifier> capeCache = new HashMap<>();
+    private static Map<UUID, ResourceLocation> capeCache = new HashMap<>();
     private static Set<UUID> activePlayers = new HashSet<>();
-    private static Map<Identifier, GeoModel> cachedModels = new ConcurrentHashMap<>();
-    private static Map<Identifier, AnimationFile> cachedAnimations
-        = new ConcurrentHashMap<>();
 
     private static void refresh() {
         boolean doRefresh = false;
@@ -43,7 +40,7 @@ public class CosmeticsManager {
         for (ICosmeticProvider provider : providers) {
             provider.addCosmetics(player, (cosmetic) -> cosmetics.add(cosmetic));
             if (!capeCache.containsKey(player)) {
-                Identifier cape = provider.getCape(player);
+                ResourceLocation cape = provider.getCape(player);
                 if (cape != null)
                     capeCache.put(player, cape);
             }
@@ -63,7 +60,7 @@ public class CosmeticsManager {
         return cosmeticCache.get(uuid);
     }
 
-    public static Identifier getCape(UUID player) {
+    public static ResourceLocation getCape(UUID player) {
         if (!activePlayers.contains(player)) {
             activePlayers.add(player);
             loadPlayer(player);
@@ -72,19 +69,11 @@ public class CosmeticsManager {
         return capeCache.get(player);
     }
 
-    protected static GeoModel getModel(Identifier id) {
-        return cachedModels.get(id);
+    public static void loadModel(ResourceLocation id, BakedGeoModel model) {
+        GeckoLibCache.getBakedModels().put(id, model);
     }
 
-    protected static AnimationFile getAnimations(Identifier id) {
-        return cachedAnimations.get(id);
-    }
-
-    public static void loadModel(Identifier id, GeoModel model) {
-        cachedModels.put(id, model);
-    }
-
-    public static void loadAnimations(Identifier id, AnimationFile animations) {
-        cachedAnimations.put(id, animations);
+    public static void loadAnimations(ResourceLocation id, BakedAnimations animations) {
+        GeckoLibCache.getBakedAnimations().put(id, animations);
     }
 }

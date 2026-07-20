@@ -4,23 +4,25 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.ShapedRecipe;
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.ShapedRecipePattern;
+import net.minecraft.world.level.block.Block;
 
 public class ShapedRecipeBuilder {
-    public Identifier ident;
+    public ResourceLocation ident;
     public String[] pattern;
     public Map<Character, Ingredient> ingredients = new HashMap<>();
     public ItemStack output;
 
-    public ShapedRecipeBuilder(Identifier ident, ItemStack output) {
+    public ShapedRecipeBuilder(ResourceLocation ident, ItemStack output) {
         this.ident = ident;
         this.output = output;
     }
@@ -36,7 +38,7 @@ public class ShapedRecipeBuilder {
     }
 
     public ShapedRecipeBuilder ingredient(char c, ItemStack... is) {
-        return this.ingredient(c, Ingredient.ofStacks(is));
+        return this.ingredient(c, Ingredient.of(is));
     }
 
     public ShapedRecipeBuilder ingredient(char c, Item i) {
@@ -49,46 +51,29 @@ public class ShapedRecipeBuilder {
 
     public ShapedRecipeBuilder ingredient(char c, String s) {
         if (s.charAt(0) == '#') {
-            return this.tagIngredient(c, new Identifier(s.substring(1)));
+            return this.tagIngredient(c, ResourceLocation.parse(s.substring(1)));
         }
 
-        var ident = new Identifier(s);
-        var maybeItem = Registry.ITEM.get(ident);
-        if (maybeItem == null) {
-            var maybeBlock = Registry.BLOCK.get(ident);
+        var ident = ResourceLocation.parse(s);
+        var maybeItem = BuiltInRegistries.ITEM.getOptional(ident).orElse(Items.AIR);
+        if (maybeItem == Items.AIR) {
+            var maybeBlock = BuiltInRegistries.BLOCK.getOptional(ident).orElse(null);
             if (maybeBlock == null)
                 throw new IllegalArgumentException(
                     "ID " + s + " not found in item or block registry!"
                 );
-
             return this.ingredient(c, maybeBlock);
         }
 
         return this.ingredient(c, maybeItem);
     }
 
-    public ShapedRecipeBuilder tagIngredient(char c, Identifier t) {
-        return this.ingredient(c, Ingredient.fromTag(TagKey.of(Registry.ITEM_KEY, t)));
+    public ShapedRecipeBuilder tagIngredient(char c, ResourceLocation t) {
+        return this.ingredient(c, Ingredient.of(TagKey.create(BuiltInRegistries.ITEM.key(), t)));
     }
 
     public ShapedRecipe build() {
-        int width = -1;
-        for (String line : this.pattern) {
-            if (width != -1 && width != line.length())
-                throw new IllegalArgumentException(
-                    "Lines in crafting pattern must be same width!"
-                );
-            width = line.length();
-        }
-
-        DefaultedList<Ingredient> ingredients = DefaultedList.of();
-        Arrays.stream(this.pattern)
-            .flatMap(s -> s.chars().mapToObj(c -> (char) c))
-            .map(k -> this.ingredients.getOrDefault(k, Ingredient.empty()))
-            .forEach(ingredients::add);
-
-        return new ShapedRecipe(
-            this.ident, "", width, this.pattern.length, ingredients, this.output
-        );
+        ShapedRecipePattern pattern = ShapedRecipePattern.of(this.ingredients, Arrays.asList(this.pattern));
+        return new ShapedRecipe("", CraftingBookCategory.MISC, pattern, this.output);
     }
 }

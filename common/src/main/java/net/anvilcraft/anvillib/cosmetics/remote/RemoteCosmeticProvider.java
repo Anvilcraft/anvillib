@@ -19,15 +19,15 @@ import net.anvilcraft.anvillib.cosmetics.remote.thread.CapeLoaderThread;
 import net.anvilcraft.anvillib.cosmetics.remote.thread.CosmeticAssetsLoaderThread;
 import net.anvilcraft.anvillib.cosmetics.remote.thread.CosmeticLoaderThread;
 import net.anvilcraft.anvillib.cosmetics.remote.thread.PlayerCosmeticLoaderThread;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
+import net.minecraft.Util;
+import net.minecraft.resources.ResourceLocation;
 
 public class RemoteCosmeticProvider implements ICosmeticProvider {
     public static RemoteCosmeticProvider INSTANCE = null;
 
     public final Map<String, RemoteCosmetic> cosmetics = new ConcurrentHashMap<>();
     public final Map<UUID, Set<String>> playerCosmetics = new ConcurrentHashMap<>();
-    public final Map<String, Identifier> capes = new ConcurrentHashMap<>();
+    public final Map<String, ResourceLocation> capes = new ConcurrentHashMap<>();
     public final Map<UUID, String> playerCapes = new ConcurrentHashMap<>();
     private final Map<String, Boolean> knownCosmetics = new ConcurrentHashMap<>();
     private final Map<String, Boolean> knownCapes = new ConcurrentHashMap<>();
@@ -72,7 +72,7 @@ public class RemoteCosmeticProvider implements ICosmeticProvider {
     }
 
     @Override
-    public Identifier getCape(UUID player) {
+    public ResourceLocation getCape(UUID player) {
         if (!this.playerCapes.containsKey(player))
             return null;
         String cape = this.playerCapes.get(player);
@@ -88,7 +88,7 @@ public class RemoteCosmeticProvider implements ICosmeticProvider {
     private void loadNewPlayer(UUID id) throws MalformedURLException {
         this.playerCosmetics.putIfAbsent(id, new HashSet<>());
         URI url = playerBase.resolve(id.toString());
-        Util.getMainWorkerExecutor().execute(new PlayerCosmeticLoaderThread(url, this));
+        Util.backgroundExecutor().execute(new PlayerCosmeticLoaderThread(url, this));
     }
 
     public void loadCosmetic(String id) throws MalformedURLException {
@@ -99,14 +99,14 @@ public class RemoteCosmeticProvider implements ICosmeticProvider {
             return;
         this.knownCosmetics.put(id, true);
         URI url = cosmeticBase.resolve(id);
-        Util.getMainWorkerExecutor().execute(new CosmeticLoaderThread(url, this));
+        Util.backgroundExecutor().execute(new CosmeticLoaderThread(url, this));
     }
 
     public void loadAssets(CosmeticData data, RemoteCosmetic cosmetic) {
         if (!Compat.hasGeckolib()) {
             return;
         }
-        Util.getMainWorkerExecutor().execute(
+        Util.backgroundExecutor().execute(
             new CosmeticAssetsLoaderThread(cosmetic, data, this.cacheDir, this)
         );
     }
@@ -116,7 +116,7 @@ public class RemoteCosmeticProvider implements ICosmeticProvider {
             return;
         this.knownCapes.put(id, true);
         URI url = capeBase.resolve(id);
-        Util.getMainWorkerExecutor().execute(
+        Util.backgroundExecutor().execute(
             new CapeLoaderThread(id, url, this.cacheDir, this)
         );
     }

@@ -3,6 +3,7 @@ package net.anvilcraft.anvillib.cosmetics.remote.thread;
 import java.io.IOException;
 import java.net.URI;
 
+import net.anvilcraft.anvillib.AnvilLib;
 import net.anvilcraft.anvillib.cosmetics.remote.RemoteCosmeticProvider;
 import net.anvilcraft.anvillib.cosmetics.remote.model.PlayerData;
 
@@ -11,7 +12,7 @@ public class PlayerCosmeticLoaderThread extends AbstractFileDownloaderThread {
     private RemoteCosmeticProvider provider;
 
     public PlayerCosmeticLoaderThread(URI config, RemoteCosmeticProvider provider) {
-        super("0.2.0");
+        super(AnvilLib.VERSION);
         this.config = config;
         this.provider = provider;
     }

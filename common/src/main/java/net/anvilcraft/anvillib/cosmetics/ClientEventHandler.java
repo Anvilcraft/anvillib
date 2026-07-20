@@ -11,16 +11,17 @@ import net.anvilcraft.anvillib.cosmetics.remote.RemoteCosmeticProvider;
 import net.anvilcraft.anvillib.event.AddEntityRenderLayersEvent;
 import net.anvilcraft.anvillib.event.Bus;
 import net.anvilcraft.anvillib.event.IEventBusRegisterable;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.world.entity.player.Player;
 
 public class ClientEventHandler implements IEventBusRegisterable {
     private void onAddLayers(AddEntityRenderLayersEvent ev) {
-        for (Entry<String, EntityRenderer<? extends PlayerEntity>> skin :
+        for (Entry<PlayerSkin.Model, EntityRenderer<? extends Player>> entry :
              ev.skinMap().entrySet())
-            if (skin.getValue() instanceof PlayerEntityRenderer render)
-                render.addFeature(new CosmeticFeatureRenderer(render, skin.getKey()));
+            if (entry.getValue() instanceof PlayerRenderer render)
+                render.addLayer(new CosmeticFeatureRenderer(render));
     }
 
     public static void registerRemoteCosmetics(File assetsCache) {

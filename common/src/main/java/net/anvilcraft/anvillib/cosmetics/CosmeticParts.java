@@ -1,9 +1,7 @@
 package net.anvilcraft.anvillib.cosmetics;
 
-import java.util.Optional;
-
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
 
 public class CosmeticParts {
     public boolean head = false;
@@ -22,31 +20,18 @@ public class CosmeticParts {
 
     public CosmeticParts() {}
 
-    public CosmeticParts(GeoModel model) {
-        Optional<GeoBone> maybeRoot = model.getBone("root");
-        if (maybeRoot.isEmpty())
-            return;
+    public CosmeticParts(BakedGeoModel model) {
+        var maybeRoot = model.getBone("root");
+        if (maybeRoot.isEmpty()) return;
         GeoBone root = maybeRoot.get();
-        for (GeoBone bone : root.childBones) {
-            switch (bone.name) {
-                case headName:
-                    this.head = true;
-                    break;
-                case bodyName:
-                    this.body = true;
-                    break;
-                case leftArmName:
-                    this.leftArm = true;
-                    break;
-                case leftLegName:
-                    this.leftLeg = true;
-                    break;
-                case rightArmName:
-                    this.rightArm = true;
-                    break;
-                case rightLegName:
-                    this.rightLeg = true;
-                    break;
+        for (GeoBone bone : root.getChildBones()) {
+            switch (bone.getName()) {
+                case headName -> this.head = true;
+                case bodyName -> this.body = true;
+                case leftArmName -> this.leftArm = true;
+                case leftLegName -> this.leftLeg = true;
+                case rightArmName -> this.rightArm = true;
+                case rightLegName -> this.rightLeg = true;
             }
         }
     }
