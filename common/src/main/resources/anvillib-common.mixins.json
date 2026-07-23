@@ -7,7 +7,9 @@
         "client.MinecraftClientMixin",
         "client.AbstractClientPlayerEntityMixin"
     ],
-    "mixins": [],
+    "mixins": [
+        "accessor.GeoModelAccessor"
+    ],
     "injectors": {
         "defaultRequire": 1
     }

@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.intellij.lang.annotations.Identifier;
 
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.cache.GeckoLibCache;
@@ -18,6 +21,9 @@ public class CosmeticsManager {
     private static Map<UUID, List<ICosmetic>> cosmeticCache = new HashMap<>();
     private static Map<UUID, ResourceLocation> capeCache = new HashMap<>();
     private static Set<UUID> activePlayers = new HashSet<>();
+    private static Map<Identifier, BakedGeoModel> cachedModels = new ConcurrentHashMap<>();
+    private static Map<Identifier, BakedAnimations> cachedAnimations
+        = new ConcurrentHashMap<>();
 
     private static void refresh() {
         boolean doRefresh = false;
@@ -67,6 +73,14 @@ public class CosmeticsManager {
         }
         refresh();
         return capeCache.get(player);
+    }
+
+    protected static BakedGeoModel getModel(ResourceLocation id) {
+        return cachedModels.get(id);
+    }
+
+    protected static BakedAnimations getAnimations(ResourceLocation id) {
+        return cachedAnimations.get(id);
     }
 
     public static void loadModel(ResourceLocation id, BakedGeoModel model) {
