@@ -8,7 +8,8 @@
         "client.AbstractClientPlayerEntityMixin"
     ],
     "mixins": [
-        "accessor.GeoModelAccessor"
+        "accessor.GeoModelAccessor",
+        "common.ChunkGeneratorMixin"
     ],
     "injectors": {
         "defaultRequire": 1

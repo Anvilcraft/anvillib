@@ -3,6 +3,8 @@ package net.anvilcraft.anvillib;
 import net.anvilcraft.anvillib.event.AddModResourcepacksEvent;
 import net.anvilcraft.anvillib.event.ApplyRecipesEvent;
 import net.anvilcraft.anvillib.event.Bus;
+import net.anvilcraft.anvillib.structure.StructureRule;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackSelectionConfig;
@@ -42,6 +44,7 @@ public class AnvilLibNeoForge {
 
         modEventBus.addListener(this::onClientSetup);
         modEventBus.addListener(AnvilLibNeoForge::onAddPackFinders);
+        modEventBus.addListener(AnvilLibNeoForge::onNewDataPackRegistries);
         NeoForge.EVENT_BUS.addListener(this::onAddReloadListeners);
     }
 
@@ -87,6 +90,10 @@ public class AnvilLibNeoForge {
                 if (p != null) consumer.accept(p);
             });
         }
+    }
+
+    private static void onNewDataPackRegistries(DataPackRegistryEvent.NewRegistry event) {
+        event.dataPackRegistry(StructureRule.REGISTRY_KEY, StructureRule.CODEC);
     }
 
     private void onAddReloadListeners(AddReloadListenerEvent event) {
