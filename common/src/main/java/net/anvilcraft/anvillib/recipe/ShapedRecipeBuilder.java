@@ -69,6 +69,10 @@ public class ShapedRecipeBuilder {
         return this.ingredient(c, maybeItem);
     }
 
+    public ShapedRecipeBuilder ingredient(char c, TagKey<Item> t) {
+        return this.ingredient(c, Ingredient.of(t));
+    }
+
     public ShapedRecipeBuilder tagIngredient(char c, ResourceLocation t) {
         return this.ingredient(c, Ingredient.of(TagKey.create(BuiltInRegistries.ITEM.key(), t)));
     }

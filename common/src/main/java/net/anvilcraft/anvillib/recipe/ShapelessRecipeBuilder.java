@@ -42,9 +42,9 @@ public class ShapelessRecipeBuilder {
         return this.ingredient(new ItemStack(b));
     }
 
-    public ShapelessRecipeBuilder ingredient(char c, String s) {
+    public ShapelessRecipeBuilder ingredient(String s) {
         if (s.charAt(0) == '#') {
-            return this.tagIngredient(c, ResourceLocation.parse(s.substring(1)));
+            return this.tagIngredient(ResourceLocation.parse(s.substring(1)));
         }
 
         var ident = ResourceLocation.parse(s);
@@ -61,7 +61,11 @@ public class ShapelessRecipeBuilder {
         return this.ingredient(maybeItem);
     }
 
-    public ShapelessRecipeBuilder tagIngredient(char c, ResourceLocation t) {
+    public ShapelessRecipeBuilder ingredient(TagKey<Item> t) {
+        return this.ingredient(Ingredient.of(t));
+    }
+
+    public ShapelessRecipeBuilder tagIngredient(ResourceLocation t) {
         return this.ingredient(Ingredient.of(TagKey.create(BuiltInRegistries.ITEM.key(), t)));
     }
 
