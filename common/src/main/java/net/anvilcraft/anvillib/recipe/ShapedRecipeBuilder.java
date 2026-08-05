@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.block.Block;
@@ -72,8 +73,8 @@ public class ShapedRecipeBuilder {
         return this.ingredient(c, Ingredient.of(TagKey.create(BuiltInRegistries.ITEM.key(), t)));
     }
 
-    public ShapedRecipe build() {
+    public RecipeHolder<ShapedRecipe> build() {
         ShapedRecipePattern pattern = ShapedRecipePattern.of(this.ingredients, Arrays.asList(this.pattern));
-        return new ShapedRecipe("", CraftingBookCategory.MISC, pattern, this.output);
+        return new RecipeHolder<>(ident, new ShapedRecipe("", CraftingBookCategory.MISC, pattern, this.output));
     }
 }
