@@ -9,10 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.intellij.lang.annotations.Identifier;
-
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.cache.GeckoLibCache;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.loading.object.BakedAnimations;
 
@@ -21,8 +18,8 @@ public class CosmeticsManager {
     private static Map<UUID, List<ICosmetic>> cosmeticCache = new HashMap<>();
     private static Map<UUID, ResourceLocation> capeCache = new HashMap<>();
     private static Set<UUID> activePlayers = new HashSet<>();
-    private static Map<Identifier, BakedGeoModel> cachedModels = new ConcurrentHashMap<>();
-    private static Map<Identifier, BakedAnimations> cachedAnimations
+    private static Map<ResourceLocation, BakedGeoModel> cachedModels = new ConcurrentHashMap<>();
+    private static Map<ResourceLocation, BakedAnimations> cachedAnimations
         = new ConcurrentHashMap<>();
 
     private static void refresh() {
@@ -75,19 +72,19 @@ public class CosmeticsManager {
         return capeCache.get(player);
     }
 
-    protected static BakedGeoModel getModel(ResourceLocation id) {
+    public static BakedGeoModel getModel(ResourceLocation id) {
         return cachedModels.get(id);
     }
 
-    protected static BakedAnimations getAnimations(ResourceLocation id) {
+    public static BakedAnimations getAnimations(ResourceLocation id) {
         return cachedAnimations.get(id);
     }
 
     public static void loadModel(ResourceLocation id, BakedGeoModel model) {
-        GeckoLibCache.getBakedModels().put(id, model);
+        cachedModels.put(id, model);
     }
 
     public static void loadAnimations(ResourceLocation id, BakedAnimations animations) {
-        GeckoLibCache.getBakedAnimations().put(id, animations);
+        cachedAnimations.put(id, animations);
     }
 }

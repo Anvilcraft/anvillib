@@ -1,5 +1,7 @@
 package net.anvilcraft.anvillib.cosmetics;
 
+import java.util.Objects;
+
 import net.anvilcraft.anvillib.mixin.accessor.GeoModelAccessor;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.GeckoLibConstants;
@@ -32,6 +34,8 @@ public class CosmeticModel extends GeoModel<CosmeticItem> {
         BakedAnimations animation = CosmeticsManager.getAnimations(location);
         if (animation == null) {
             animation = GeckoLibCache.getBakedAnimations().get(location);
+        } else {
+            GeckoLibCache.getBakedAnimations().put(location, animation);
         }
 
         if (animation == null) {
@@ -48,7 +52,10 @@ public class CosmeticModel extends GeoModel<CosmeticItem> {
         BakedGeoModel model = CosmeticsManager.getModel(location);
         if (model == null) {
             model = GeckoLibCache.getBakedModels().get(location);
+        } else {
+            GeckoLibCache.getBakedModels().put(location, model);
         }
+        Objects.requireNonNull(model);
 
         GeoModelAccessor accessor = (GeoModelAccessor) this;
         if (model != accessor.getCurrentModel()) {

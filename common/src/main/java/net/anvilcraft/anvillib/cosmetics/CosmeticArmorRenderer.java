@@ -267,7 +267,7 @@ public class CosmeticArmorRenderer implements GeoRenderer<CosmeticItem> {
     }
 
     protected void setBoneVisibility(BakedGeoModel model, String boneName, boolean isVisible) {
-        if (model == null || boneName == null) return;
+        if (boneName == null) return;
         model.getBone(boneName).ifPresent(bone -> bone.setHidden(!isVisible));
     }
 
