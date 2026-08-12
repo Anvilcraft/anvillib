@@ -13,6 +13,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
 @EventBusSubscriber(
     modid = AnvilLib.MODID, bus = EventBusSubscriber.Bus.MOD, value = { Dist.CLIENT }
@@ -28,5 +29,10 @@ public class ClientEventHandler {
                 map.put(skin, (EntityRenderer<? extends Player>) renderer);
         }
         Bus.MAIN.fire(new AddEntityRenderLayersEvent(map));
+    }
+
+    @SubscribeEvent
+    public static void onRegisterClientExtensions(RegisterClientExtensionsEvent ev) {
+        Bus.MAIN.fire(ev);
     }
 }
