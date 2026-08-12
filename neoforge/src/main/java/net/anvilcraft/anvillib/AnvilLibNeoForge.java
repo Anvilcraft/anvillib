@@ -5,6 +5,7 @@ import net.anvilcraft.anvillib.event.ApplyRecipesEvent;
 import net.anvilcraft.anvillib.event.Bus;
 import net.anvilcraft.anvillib.structure.StructureRule;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackSelectionConfig;
@@ -98,6 +99,7 @@ public class AnvilLibNeoForge {
 
     private void onAddReloadListeners(AddReloadListenerEvent event) {
         RecipeManager rm = event.getServerResources().getRecipeManager();
+        HolderLookup.Provider registryAccess = event.getRegistryAccess();
         event.addListener(new SimplePreparableReloadListener<Void>() {
             @Override
             protected Void prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
@@ -108,7 +110,7 @@ public class AnvilLibNeoForge {
             protected void apply(
                 Void prepared, ResourceManager resourceManager, ProfilerFiller profiler
             ) {
-                Bus.MAIN.fire(new ApplyRecipesEvent(rm));
+                Bus.MAIN.fire(new ApplyRecipesEvent(rm, registryAccess));
             }
         });
     }

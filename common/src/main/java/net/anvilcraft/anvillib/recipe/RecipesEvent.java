@@ -5,23 +5,30 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
 
+import com.mojang.serialization.DynamicOps;
+
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 
 public class RecipesEvent {
     public Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> recipes;
     public Map<ResourceLocation, RecipeHolder<?>> recipesById;
+    public HolderLookup.Provider registryAccess;
 
     public RecipesEvent(
         Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> recipes,
-        Map<ResourceLocation, RecipeHolder<?>> recipesById
+        Map<ResourceLocation, RecipeHolder<?>> recipesById,
+        HolderLookup.Provider registryAccess
     ) {
         this.recipes = recipes;
         this.recipesById = recipesById;
+        this.registryAccess = registryAccess;
     }
 
     public void registerRecipe(RecipeHolder<?> recipe) {
@@ -30,6 +37,10 @@ public class RecipesEvent {
 
         this.recipes.get(recipe.value().getType()).put(recipe.id(), recipe);
         this.recipesById.put(recipe.id(), recipe);
+    }
+
+    public void registerRecipe(ResourceLocation id, Recipe<?> recipe) {
+        this.registerRecipe(new RecipeHolder<>(id, recipe));
     }
 
     public Optional<RecipeHolder<?>> removeRecipeID(ResourceLocation id) {
@@ -77,5 +88,20 @@ public class RecipesEvent {
                 this.registerRecipe(mapped);
             }
         }
+    }
+
+    public <E> Recipe<?> createRecipe(E object, DynamicOps<E> ops) throws IllegalStateException {
+        RecipeSerializer<?> serializer = ops
+            .get(object, "type")
+            .flatMap(ops::getStringValue)
+            .map(ResourceLocation::tryParse)
+            .map(BuiltInRegistries.RECIPE_SERIALIZER::get)
+            .getOrThrow();
+            
+        if (serializer == null) {
+            throw new IllegalStateException("ALEC");
+        }
+
+        return serializer.codec().codec().parse(ops, object).getOrThrow();
     }
 }

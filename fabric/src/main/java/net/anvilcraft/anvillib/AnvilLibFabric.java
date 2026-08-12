@@ -24,7 +24,7 @@ public class AnvilLibFabric implements ModInitializer, ClientModInitializer {
         DynamicRegistries.register(StructureRule.REGISTRY_KEY, StructureRule.CODEC);
         AnvilLib.initialize(version);
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> {
-            if (success) Bus.MAIN.fire(new ApplyRecipesEvent(server.getRecipeManager()));
+            if (success) Bus.MAIN.fire(new ApplyRecipesEvent(server.getRecipeManager(), server.registryAccess()));
         });
     }
 

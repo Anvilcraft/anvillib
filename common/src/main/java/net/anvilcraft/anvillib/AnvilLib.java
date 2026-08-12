@@ -34,7 +34,7 @@ public class AnvilLib {
                     recipes.computeIfAbsent(type, v -> new HashMap<>()).put(holder.id(), holder)
             );
 
-            var ev = new RecipesEvent(recipes, new HashMap<>(event.recipeManager().byName));
+            var ev = new RecipesEvent(recipes, new HashMap<>(event.recipeManager().byName), event.registryAccess());
             Bus.MAIN.fire(ev);
             event.recipeManager().replaceRecipes(ev.recipesById.values());
         });
