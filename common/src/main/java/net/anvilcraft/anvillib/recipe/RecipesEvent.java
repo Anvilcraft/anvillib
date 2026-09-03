@@ -1,6 +1,8 @@
 package net.anvilcraft.anvillib.recipe;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -66,17 +68,20 @@ public class RecipesEvent {
 
     public void mapRecipes(IRecipeMapper mapper) {
         var iter = this.recipesById.entrySet().iterator();
+        List<RecipeHolder<?>> toRegister = new ArrayList<>();
+        List<ResourceLocation> toRemove = new ArrayList<>();
         while (iter.hasNext()) {
             var entry = iter.next();
             if (mapper.shouldMap(entry.getValue())) {
                 var mapped = mapper.apply(entry.getValue());
                 if (mapped != entry.getValue()) {
-                    iter.remove();
-                    this.recipes.get(entry.getValue().value().getType()).remove(entry.getKey());
-                    this.registerRecipe(mapped);
+                    toRegister.add(mapped);
+                    toRemove.add(entry.getKey());
                 }
             }
         }
+        toRemove.forEach(this::removeRecipeID);
+        toRegister.forEach(this::registerRecipe);
     }
 
     public void mapRecipeID(ResourceLocation id, Function<RecipeHolder<?>, RecipeHolder<?>> func) {
