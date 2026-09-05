@@ -1,0 +1,4 @@
+rootProject.name = 'anvillib'
+
+include('7')
+include('common')

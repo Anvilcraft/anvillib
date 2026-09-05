@@ -1,0 +1,28 @@
+apply plugin: 'java'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+archivesBaseName = "anvillib-common"
+
+repositories {
+    mavenCentral()
+    maven { url = "https://maven.tilera.xyz" }
+    maven {
+        url "https://libraries.minecraft.net"
+        name "minecraft"
+    }
+}
+
+dependencies {
+    embedded "net.anvilcraft:jalec:0.1.2"
+    implementation "net.minecraft:launchwrapper:1.12"
+    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+}
+
+jar {
+    from (configurations.embedded.collect { it.isDirectory() ? it : zipTree(it) }) {
+       duplicatesStrategy = 'exclude'
+       exclude 'LICENSE.txt', 'META-INF/MANIFSET.MF', 'META-INF/maven/**', 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/services/*.Processor', 'META-INF/versions/**'
+    }
+}
