@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -24,5 +25,37 @@ jar {
     from (configurations.embedded.collect { it.isDirectory() ? it : zipTree(it) }) {
        duplicatesStrategy = 'exclude'
        exclude 'LICENSE.txt', 'META-INF/MANIFSET.MF', 'META-INF/maven/**', 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/services/*.Processor', 'META-INF/versions/**'
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+publishing {
+    tasks.publish.dependsOn 'build'
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = project.archivesBaseName
+
+            artifact sourcesJar
+            artifact jar
+        }
+    }
+
+    repositories {
+        if (project.hasProperty('mvnURL')) {
+                maven {
+                    credentials {
+                        username findProperty("mvnUsername")
+                        password findProperty("mvnPassword")
+                    }
+                    url = findProperty("mvnURL")
+                }
+        }
+        else {
+                mavenLocal()
+        }
     }
 }
