@@ -4,8 +4,10 @@ import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
+import net.anvilcraft.anvillib.api.types.IDirection;
 import net.anvilcraft.anvillib.api.units.IEnergyAdapter;
 import net.anvilcraft.anvillib.api.units.IEnergyUnit;
+import net.anvilcraft.anvillib.util.DirectionConverter;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class RFEnergyAdapter extends BaseEnergyAdapter {
@@ -31,43 +33,43 @@ public class RFEnergyAdapter extends BaseEnergyAdapter {
     }
 
     @Override
-    public boolean canConnect(Object obj, ForgeDirection from, Object source, int energyFlowFlags) {
+    public boolean canConnect(Object obj, IDirection from, Object source, int energyFlowFlags) {
         boolean requireInput = (energyFlowFlags & CAN_INPUT) == CAN_INPUT;
         boolean requireOutput = (energyFlowFlags & CAN_OUTPUT) == CAN_OUTPUT;
         return obj instanceof IEnergyConnection ? 
-            ((IEnergyConnection) obj).canConnectEnergy(from) 
+            ((IEnergyConnection) obj).canConnectEnergy(DirectionConverter.INSTANCE.convertFrom(from).get()) 
             && (!requireInput || obj instanceof IEnergyReceiver)
             && (!requireOutput || obj instanceof IEnergyProvider) : false;
     }
 
     @Override
-    public double receiveEnergy(Object obj, ForgeDirection from, double receive, boolean doReceive) {
+    public double receiveEnergy(Object obj, IDirection from, double receive, boolean doReceive) {
         if (obj instanceof IEnergyReceiver) {
-            return ((IEnergyReceiver)obj).receiveEnergy(from, (int)receive, !doReceive);
+            return ((IEnergyReceiver)obj).receiveEnergy(DirectionConverter.INSTANCE.convertFrom(from).get(), (int)receive, !doReceive);
         }
         return 0;
     }
 
     @Override
-    public double extractEnergy(Object obj, ForgeDirection from, double extract, boolean doExtract) {
+    public double extractEnergy(Object obj, IDirection from, double extract, boolean doExtract) {
         if (obj instanceof IEnergyProvider) {
-            return ((IEnergyProvider)obj).extractEnergy(from, (int)extract, !doExtract);
+            return ((IEnergyProvider)obj).extractEnergy(DirectionConverter.INSTANCE.convertFrom(from).get(), (int)extract, !doExtract);
         }
         return 0;
     }
 
     @Override
-    public double getEnergy(Object obj, ForgeDirection from) {
+    public double getEnergy(Object obj, IDirection from) {
         if (obj instanceof IEnergyHandler) {
-            return ((IEnergyHandler)obj).getEnergyStored(from);
+            return ((IEnergyHandler)obj).getEnergyStored(DirectionConverter.INSTANCE.convertFrom(from).get());
         }
         return 0;
     }
 
     @Override
-    public double getEnergyCapacity(Object obj, ForgeDirection from) {
+    public double getEnergyCapacity(Object obj, IDirection from) {
         if (obj instanceof IEnergyHandler) {
-            return ((IEnergyHandler)obj).getMaxEnergyStored(from);
+            return ((IEnergyHandler)obj).getMaxEnergyStored(DirectionConverter.INSTANCE.convertFrom(from).get());
         }
         return 0;
     }
@@ -93,27 +95,27 @@ public class RFEnergyAdapter extends BaseEnergyAdapter {
 
         @Override
         public boolean canConnectEnergy(ForgeDirection var1) {
-            return adapter.canConnect(obj, var1, this, 0);
+            return adapter.canConnect(obj, DirectionConverter.INSTANCE.convertTo(IDirection.class, var1).get(), this, 0);
         }
 
         @Override
         public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-            return (int) adapter.receiveEnergy(obj, RFEnergyAdapter.this.unit, from, maxReceive, !simulate);
+            return (int) adapter.receiveEnergy(obj, RFEnergyAdapter.this.unit, DirectionConverter.INSTANCE.convertTo(IDirection.class, from).get(), maxReceive, !simulate);
         }
 
         @Override
         public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
-            return (int) adapter.extractEnergy(obj, RFEnergyAdapter.this.unit, from, maxExtract, !simulate);
+            return (int) adapter.extractEnergy(obj, RFEnergyAdapter.this.unit, DirectionConverter.INSTANCE.convertTo(IDirection.class, from).get(), maxExtract, !simulate);
         }
 
         @Override
         public int getEnergyStored(ForgeDirection from) {
-            return (int) adapter.getEnergy(obj, RFEnergyAdapter.this.unit, from);
+            return (int) adapter.getEnergy(obj, RFEnergyAdapter.this.unit, DirectionConverter.INSTANCE.convertTo(IDirection.class, from).get());
         }
 
         @Override
         public int getMaxEnergyStored(ForgeDirection from) {
-            return (int) adapter.getEnergyCapacity(obj, RFEnergyAdapter.this.unit, from);
+            return (int) adapter.getEnergyCapacity(obj, RFEnergyAdapter.this.unit, DirectionConverter.INSTANCE.convertTo(IDirection.class, from).get());
         }
         
     }

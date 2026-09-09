@@ -12,9 +12,12 @@ import appeng.api.util.AECableType;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.IGridProxyable;
 import net.anvilcraft.anvillib.ae2.AEIntegration;
+import net.anvilcraft.anvillib.api.types.Direction;
+import net.anvilcraft.anvillib.api.types.IDirection;
 import net.anvilcraft.anvillib.api.units.IEnergyAdapter;
 import net.anvilcraft.anvillib.api.units.IEnergyUnit;
 import net.anvilcraft.anvillib.energy.BaseEnergyAdapter;
+import net.anvilcraft.anvillib.util.DirectionConverter;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class AEEnergyAdapter extends BaseEnergyAdapter {
@@ -36,19 +39,19 @@ public class AEEnergyAdapter extends BaseEnergyAdapter {
     }
 
     @Override
-    public boolean canConnect(Object obj, ForgeDirection from, Object source, int energyFlowFlags) {
-        return obj instanceof IGridHost ? ((IGridHost) obj).getCableConnectionType(from) != AECableType.NONE : false;
+    public boolean canConnect(Object obj, IDirection from, Object source, int energyFlowFlags) {
+        return obj instanceof IGridHost ? ((IGridHost) obj).getCableConnectionType(DirectionConverter.INSTANCE.convertFrom(from).get()) != AECableType.NONE : false;
     }
 
     @Override
-    public double receiveEnergy(Object obj, ForgeDirection from, double receive, boolean doReceive) {
+    public double receiveEnergy(Object obj, IDirection from, double receive, boolean doReceive) {
         if (obj instanceof IAEPowerStorage) {
             return receive - ((IAEPowerStorage) obj).injectAEPower(
                     receive,
                     doReceive ? Actionable.MODULATE : Actionable.SIMULATE
                 );
         }
-        IEnergyGrid grid = getGrid(obj, from);
+        IEnergyGrid grid = getGrid(obj, DirectionConverter.INSTANCE.convertFrom(from).get());
         if (grid != null) {
             double overflow = grid.injectPower(
                 receive,
@@ -60,8 +63,8 @@ public class AEEnergyAdapter extends BaseEnergyAdapter {
     }
 
     @Override
-    public double extractEnergy(Object obj, ForgeDirection from, double extract, boolean doExtract) {
-        IEnergySource src = obj instanceof IEnergySource ? (IEnergySource) obj : getGrid(obj, from);
+    public double extractEnergy(Object obj, IDirection from, double extract, boolean doExtract) {
+        IEnergySource src = obj instanceof IEnergySource ? (IEnergySource) obj : getGrid(obj, DirectionConverter.INSTANCE.convertFrom(from).get());
         return src != null ? src.extractAEPower(
                 extract, 
                 doExtract ? Actionable.MODULATE : Actionable.SIMULATE, 
@@ -70,20 +73,20 @@ public class AEEnergyAdapter extends BaseEnergyAdapter {
     }
 
     @Override
-    public double getEnergy(Object obj, ForgeDirection from) {
+    public double getEnergy(Object obj, IDirection from) {
         if (obj instanceof IAEPowerStorage) {
             return ((IAEPowerStorage) obj).getAECurrentPower();
         }
-        IEnergyGrid grid = getGrid(obj, from);        
+        IEnergyGrid grid = getGrid(obj, DirectionConverter.INSTANCE.convertFrom(from).get());        
         return grid != null ? grid.getStoredPower() : 0;
     }
 
     @Override
-    public double getEnergyCapacity(Object obj, ForgeDirection from) {
+    public double getEnergyCapacity(Object obj, IDirection from) {
         if (obj instanceof IAEPowerStorage) {
             return ((IAEPowerStorage) obj).getAEMaxPower();
         }
-        IEnergyGrid grid = getGrid(obj, from);        
+        IEnergyGrid grid = getGrid(obj, DirectionConverter.INSTANCE.convertFrom(from).get());        
         return grid != null ? grid.getMaxStoredPower() : 0;
     }
 
@@ -129,7 +132,7 @@ public class AEEnergyAdapter extends BaseEnergyAdapter {
             return system.extractEnergy(
                 obj, 
                 AEEnergyAdapter.this.getDefaultUnit(),
-                ForgeDirection.UNKNOWN, 
+                Direction.UNKNOWN, 
                 amt, 
                 mode == Actionable.MODULATE
             );
@@ -140,7 +143,7 @@ public class AEEnergyAdapter extends BaseEnergyAdapter {
             return amt - system.receiveEnergy(
                 obj, 
                 AEEnergyAdapter.this.getDefaultUnit(),
-                ForgeDirection.UNKNOWN, 
+                Direction.UNKNOWN, 
                 amt, 
                 mode == Actionable.MODULATE
             );
@@ -148,12 +151,12 @@ public class AEEnergyAdapter extends BaseEnergyAdapter {
 
         @Override
         public double getAEMaxPower() {
-            return system.getEnergy(obj, AEEnergyAdapter.this.getDefaultUnit(), ForgeDirection.UNKNOWN);
+            return system.getEnergy(obj, AEEnergyAdapter.this.getDefaultUnit(), Direction.UNKNOWN);
         }
 
         @Override
         public double getAECurrentPower() {
-            return system.getEnergyCapacity(obj, AEEnergyAdapter.this.getDefaultUnit(), ForgeDirection.UNKNOWN);
+            return system.getEnergyCapacity(obj, AEEnergyAdapter.this.getDefaultUnit(), Direction.UNKNOWN);
         }
 
         @Override
