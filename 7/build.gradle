@@ -107,6 +107,10 @@ publishing {
 
             pom.withXml {
                 def dependenciesNode = asNode().appendNode('dependencies')
+                def common = dependenciesNode.appendNode('dependency')
+                common.appendNode('groupId', 'net.anvilcraft')
+                common.appendNode('artifactId', 'anvillib-common')
+                common.appendNode('version', project.version)
                 def mixins = dependenciesNode.appendNode('dependency')
                 mixins.appendNode('groupId', 'com.github.tox1cozZ')
                 mixins.appendNode('artifactId', 'mixin-booter-legacy')
