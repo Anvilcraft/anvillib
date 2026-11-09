@@ -15,7 +15,7 @@ public class MixinTileEntity {
 
     public boolean anvillibTileLoaded = false;
     
-    @Inject(method = "updateEntity()V", at = @At("HEAD"), remap = false)
+    @Inject(method = "updateEntity()V", at = @At("HEAD"))
     private void onUpdate(CallbackInfo ci) {
         TileEntity self = (TileEntity)(Object)this;
         if (!this.anvillibTileLoaded && !self.getWorldObj().isRemote) {
@@ -24,7 +24,7 @@ public class MixinTileEntity {
         }
     }
 
-    @Inject(method = "invalidate()V", at = @At("HEAD"), remap = false)
+    @Inject(method = "invalidate()V", at = @At("HEAD"))
     private void onInvalidate(CallbackInfo ci) {
         TileEntity self = (TileEntity)(Object)this;
         if (!self.getWorldObj().isRemote) {
