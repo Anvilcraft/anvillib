@@ -1,6 +1,8 @@
 package net.anvilcraft.anvillib.api.types;
 
+import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public abstract class Result<T, E extends Exception> implements IReference<T> {
 
@@ -34,6 +36,14 @@ public abstract class Result<T, E extends Exception> implements IReference<T> {
     public abstract <O> Result<O, E> map(IThrowingFunction<T, O, E> function);
 
     public abstract <O> Result<O, E> flatMap(Function<T, Result<O, E>> function);
+
+    public abstract <F extends Exception> Result<T, F> mapError(Function<E, F> function);
+
+    public abstract boolean isError();
+
+    public abstract Optional<T> toOptional();
+
+    public abstract Stream<T> toStream();
 
     private static class Error<E extends Exception> extends Result<Object, E> {
 
@@ -83,6 +93,26 @@ public abstract class Result<T, E extends Exception> implements IReference<T> {
         @Override
         public Object getOrThrow() throws E {
             throw this.error;
+        }
+
+        @Override
+        public <F extends Exception> Result<Object, F> mapError(Function<E, F> function) {
+            return new Error<F>(function.apply(error));
+        }
+
+        @Override
+        public boolean isError() {
+            return true;
+        }
+
+        @Override
+        public Optional<Object> toOptional() {
+            return Optional.empty();
+        }
+
+        @Override
+        public Stream<Object> toStream() {
+            return Stream.empty();
         }
     
     }
@@ -140,6 +170,27 @@ public abstract class Result<T, E extends Exception> implements IReference<T> {
         @Override
         public T getOrThrow() throws E {
             return this.get();
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public <F extends Exception> Result<T, F> mapError(Function<E, F> function) {
+            return (Result<T, F>) this;
+        }
+
+        @Override
+        public boolean isError() {
+            return false;
+        }
+
+        @Override
+        public Optional<T> toOptional() {
+            return Optional.ofNullable(this.value);
+        }
+
+        @Override
+        public Stream<T> toStream() {
+            return Stream.of(this.value);
         }
         
     }
