@@ -11,7 +11,7 @@ public interface IEventHandler<T> extends Comparable<IEventHandler<T>>, Consumer
 
     @Override
     default int compareTo(IEventHandler<T> o) {
-        return this.order() - o.order();
+        return Integer.compare(this.order(), o.order());
     }
 
 }
