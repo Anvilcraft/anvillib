@@ -24,7 +24,7 @@ import net.anvilcraft.anvillib.registries.UnitRegistry;
 import net.anvilcraft.anvillib.usercache.UserCacheEventHandler;
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = "anvillib", version = "{VERSION}", name = "AnvilLib", dependencies = "before:appliedenergistics2@[rv3-beta-26,);before:cwg@[2.0.0-alpha.4,)")
+@Mod(modid = "anvillib", version = Constants.VERSION, name = "AnvilLib", dependencies = "before:appliedenergistics2@[rv3-beta-26,);before:cwg@[2.0.0-alpha.4,)")
 public class AnvilLib {
     public static final Logger LOGGER = LogManager.getLogger("AnvilLib");
 

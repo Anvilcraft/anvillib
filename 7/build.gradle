@@ -30,7 +30,7 @@ minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
     runDir = "run"
 
-    replaceIn "net/anvilcraft/anvillib/AnvilLib.java"
+    replaceIn "net/anvilcraft/anvillib/Constants.java"
     replace "{VERSION}", project.version
 }
 
