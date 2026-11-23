@@ -23,9 +23,9 @@ import net.anvilcraft.anvillib.api.types.Result;
 import net.anvilcraft.anvillib.api.types.Pair;
 
 @Implementation(value = IObjectType.class, id = "gson")
-public class GsonManipulator implements IObjectType<JsonElement> {
+public class GsonObjectType implements IObjectType<JsonElement> {
 
-    private GsonManipulator() {
+    private GsonObjectType() {
         
     }
 

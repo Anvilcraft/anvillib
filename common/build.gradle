@@ -18,6 +18,7 @@ repositories {
 dependencies {
     embedded "net.anvilcraft:jalec:0.1.2"
     implementation "net.minecraft:launchwrapper:1.12"
+    implementation "com.google.code.gson:gson:2.2.4"
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 }
 
