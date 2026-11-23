@@ -1,7 +1,6 @@
 package net.anvilcraft.anvillib;
 
 import java.io.File;
-import java.lang.reflect.Method;
 
 import cpw.mods.fml.relauncher.CoreModManager;
 import net.anvilcraft.alec.jalec.factories.AlecCriticalRuntimeErrorExceptionFactory;
@@ -10,8 +9,7 @@ import net.anvilcraft.anvillib.earlyload.IEarlyLoadService;
 import net.anvilcraft.anvillib.earlyload.RegisterTransformersEvent;
 import net.anvilcraft.anvillib.event.Bus;
 import net.anvilcraft.anvillib.event.IEventHandler;
-import net.minecraft.launchwrapper.Launch;
-import net.minecraft.launchwrapper.LaunchClassLoader;
+import net.anvilcraft.anvillib.util.JarUtils;
 
 public class EarlyLoadFixer implements IEarlyLoadService {
 
@@ -28,14 +26,9 @@ public class EarlyLoadFixer implements IEarlyLoadService {
         @Override
         public void accept(EarlyLoadEvent ev) {
             try {
-                String uri = getClass().getProtectionDomain().getCodeSource().getLocation().toURI().toString();
-                String jarFile = CoreModManager.getLoadedCoremods().stream().filter(jar -> uri.contains(jar)).findFirst().get();
-                CoreModManager.getLoadedCoremods().remove(jarFile);
-                CoreModManager.getReparseableCoremods().add(jarFile);
-                File coreModFile = new File(jarFile);
-                Method loadCoreMod = CoreModManager.class.getDeclaredMethod("loadCoreMod", LaunchClassLoader.class, String.class, File.class);
-                loadCoreMod.setAccessible(true);
-                loadCoreMod.invoke(null, Launch.classLoader, "net.anvilcraft.anvillib.AnvilCore", coreModFile);
+                File coreModFile = JarUtils.getAnvillibJar();
+                CoreModManager.getReparseableCoremods().add(coreModFile.getName());
+                JarUtils.injectCoremod(coreModFile, "net.anvilcraft.anvillib.AnvilCore", true);
             } catch (Exception e) {
                 throw AlecCriticalRuntimeErrorExceptionFactory.PLAIN.createAlecExceptionWithCause(e, new Object[0]);
             }

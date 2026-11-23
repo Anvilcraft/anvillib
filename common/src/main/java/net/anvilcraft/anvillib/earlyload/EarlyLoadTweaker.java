@@ -2,6 +2,7 @@ package net.anvilcraft.anvillib.earlyload;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
@@ -15,7 +16,9 @@ import net.minecraft.launchwrapper.LaunchClassLoader;
 public class EarlyLoadTweaker implements ITweaker {
 
     private boolean hasLoadedClassloader = false;
+    private List<String> postponedTweakClassed = new ArrayList<>();
 
+    @SuppressWarnings("unchecked")
     public EarlyLoadTweaker() {
         Optional<LaunchClassLoader> classLoader = Optional.ofNullable(Launch.classLoader);
         classLoader.ifPresent(lcl -> {
@@ -30,11 +33,27 @@ public class EarlyLoadTweaker implements ITweaker {
             Bus.MAIN.register(service);
         }
 
-        classLoader.ifPresent(this::injectIntoClassLoader);
+        // I'm going first
+        List<ITweaker> canonicalTweakers = (List<ITweaker>) Launch.blackboard.get("Tweaks");
+        List<ITweaker> bootstrappedTweakers = new ArrayList<>(canonicalTweakers);
+        Launch.blackboard.put("net.anvilcraft.BootstrappedTweakers", bootstrappedTweakers);
+        canonicalTweakers.clear();
+        bootstrappedTweakers.remove(this);
+        List<String> tweakClasses = (List<String>) Launch.blackboard.get("TweakClasses");
+        postponedTweakClassed.addAll(tweakClasses);
+        for (int i = 0; i < tweakClasses.size(); i++) {
+            tweakClasses.set(i, "net.anvilcraft.anvillib.earlyload.EarlyLoadTweaker");
+        }
+
+        Bus.MAIN.register(AddTweakerEvent.class, e -> bootstrappedTweakers.add(e.getTweaker()));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile) {
+        List<String> tweakClasses = (List<String>) Launch.blackboard.get("TweakClasses");
+        tweakClasses.add("net.anvilcraft.anvillib.earlyload.PostponedTweakerLoader");
+        tweakClasses.addAll(postponedTweakClassed);
         boolean isClient = args.contains("--uuid");
         Runnable gameStopper = () -> {
             try {

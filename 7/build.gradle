@@ -66,6 +66,14 @@ jar {
     }
 }
 
+runClient {
+    args '--tweakClass', 'net.anvilcraft.anvillib.earlyload.EarlyLoadTweaker'
+}
+
+runServer {
+    args '--tweakClass', 'net.anvilcraft.anvillib.earlyload.EarlyLoadTweaker'
+}
+
 processResources {
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
