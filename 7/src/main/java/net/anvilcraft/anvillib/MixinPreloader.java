@@ -22,6 +22,7 @@ import net.anvilcraft.anvillib.event.IEventHandler;
 import net.anvilcraft.anvillib.impl.serialize.CombinedSerializer;
 import net.anvilcraft.anvillib.impl.serialize.FileResponseSerializer;
 import net.anvilcraft.anvillib.impl.serialize.GsonSerializer;
+import net.anvilcraft.anvillib.util.JarUtils;
 
 public class MixinPreloader implements IEarlyLoadService {
 
@@ -43,13 +44,20 @@ public class MixinPreloader implements IEarlyLoadService {
         public void accept(EarlyLoadEvent ev) {
             if (!isMixinLoaded()) {
                 System.out.println("Mixins are missing! Downloading Unimixins");
+                Path downloadedFile = null;
                 try {
-                    downloadMod(ev.gameDir.toPath().resolve("mods"), FILE_HASH);
+                    downloadedFile = downloadMod(ev.gameDir.toPath().resolve("mods"), FILE_HASH);
                 } catch (NoSuchAlgorithmException | IOException e) {
                     throw new RuntimeException(e);
                 }
-                System.out.println("Unimixins successfully installed! Please restart the game");
-                ev.stopGame.run();
+                System.out.println("Unimixins successfully installed!");
+                try {
+                    JarUtils.addJar(downloadedFile.toFile());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("Mod injection failed, please restart the game");
+                    ev.stopGame.run();
+                }
             }
         }
 
